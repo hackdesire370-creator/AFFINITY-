@@ -1,0 +1,2853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affinity | Memory Vault</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+</head>
+<body>
+    <div class="glow-bg"></div>
+    <div class="glow-bg glow-bg-2"></div>
+    
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-text">Affinity</span>
+            </div>
+            <div class="header-right">
+                <div class="header-nav">
+                    <div class="nav-item-dropdown" id="createVaultDropdownContainer">
+                        <a href="#create-vaults" class="header-link active" id="createVaultToggle">
+                            <i class="ph ph-sparkle"></i>
+                            <span class="label">Create Vaults</span>
+                            <i class="ph ph-caret-down dropdown-icon"></i>
+                        </a>
+                        <div class="dropdown-menu" id="createVaultMenu">
+                            <a href="#vault-birthday" class="dropdown-item"><i class="ph ph-cake"></i>Birthday</a>
+                            <a href="#vault-anniversary" class="dropdown-item"><i class="ph ph-heart"></i>Anniversary</a>
+                            <a href="#vault-friendship" class="dropdown-item"><i class="ph ph-users"></i>Friendship</a>
+                            <a href="#vault-family" class="dropdown-item"><i class="ph ph-house"></i>Family</a>
+                            <a href="#vault-surprise" class="dropdown-item"><i class="ph ph-gift"></i>Just a Surprise</a>
+                        </div>
+                    </div>
+                    <a href="#my-vaults" class="header-link">
+                        <i class="ph ph-safe"></i>
+                        <span class="label">My Vaults</span>
+                    </a>
+                </div>
+                <button class="mobile-menu-btn" id="menuBtn"><i class="ph ph-list"></i></button>
+            </div>
+        </div>
+        <div class="header-gradient-bar"></div>
+    </header>
+
+    <div class="layout-wrapper">
+
+        <div class="content-wrapper">
+
+            <!-- ── Dashboard ───────────────────────────────────────────── -->
+            <main class="main-content" id="view-dashboard">
+                <section class="hero">
+                    <div class="hero-text">
+                        <h1>Unlock your hidden <span class="gradient-text">memories</span></h1>
+                        <p>A cinematic digital vault designed to preserve and resurface the moments that matter most.</p>
+                        <div class="hero-actions">
+                            <a href="#enter-vault" class="primary-btn" style="text-decoration:none; display:inline-flex;">Enter the Vault</a>
+                            <button class="secondary-btn" id="learnMoreBtn">Learn More</button>
+                        </div>
+                    </div>
+                    
+                    <div class="vault-preview">
+                        <div class="vault-card">
+                            <div class="card-glow"></div>
+                            <div class="card-content">
+                                <h3>A Glimpse of the Past</h3>
+                                <p>Memories are safely encrypted until the time is right.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- ── Birthday Vault ──────────────────────────────────────── -->
+            <main class="main-content birthday-vault-view" id="view-enter-vault" style="display: none;">
+                <div class="sparkles-container" id="sparklesContainer"></div>
+                
+                <div class="birthday-vault-center">
+                    <div class="birthday-vault-card" id="birthdayVaultCard">
+                        <div class="vault-handle">
+                            <i class="ph ph-lock-key"></i>
+                        </div>
+                        <div class="vault-decorations" id="vaultDecorations">
+                            <i class="ph-fill ph-cake" id="vaultDecorIcon1"></i>
+                            <i class="ph-fill ph-gift" id="vaultDecorIcon2"></i>
+                            <i class="ph-fill ph-confetti" id="vaultDecorIcon3"></i>
+                        </div>
+                        
+                        <h2 id="vaultCardTitle">A Special Memory</h2>
+                        <p id="vaultCardDesc">Locked specifically for your eyes.</p>
+                        
+                        <div class="passkey-section" id="passkeySection">
+                            <div class="input-wrapper">
+                                <i class="ph ph-key"></i>
+                                <input type="password" id="birthdayPasskey" placeholder="Enter Passkey">
+                            </div>
+                            <button class="primary-btn glow-btn" id="openVaultBtn" disabled>Create Vault</button>
+                            <div class="error-msg" id="vaultErrorMsg">That key doesn't unlock this memory 💔</div>
+                        </div>
+
+                        <div class="success-message" id="vaultSuccessContent" style="display: none;">
+                            <h3>Passkey Created</h3>
+                            <p>Your vault is now secure. What would you like to add first?</p>
+                            
+                            <div class="vault-options">
+
+
+                                <!-- Affinity Builder card -->
+                                <div class="vault-option-card affinity-builder-card" id="affinityBuilderCard">
+                                    <div class="option-icon"><i class="ph ph-magic-wand"></i></div>
+                                    <div class="option-text">
+                                        <h4>Affinity Builder</h4>
+                                        <p>Customize &amp; manage your vault</p>
+                                    </div>
+                                    <button class="icon-btn"><i class="ph ph-arrow-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- ── Affinity Builder Dashboard ────────────────────────────── -->
+            <main class="main-content builder-dash-view" id="view-affinity-builder" style="display:none;">
+                <div class="builder-dash-container">
+                    <button class="back-btn" data-back="true" style="margin-bottom: 2rem;"><i class="ph ph-arrow-left"></i> Back</button>
+                    
+                    <div class="builder-dash-header">
+                        <div class="builder-dash-icon"><i class="ph-fill ph-gem"></i></div>
+                        <h2 class="builder-dash-title">
+                            <span class="gradient-text-pink">Affinity</span> <span class="gradient-text-blue">Builder</span>
+                        </h2>
+                        <p class="builder-dash-subtitle">Design. Preview. Share your memories ✨</p>
+                        
+                        <div class="builder-dash-divider">
+                            <span>What would you like to do next?</span>
+                        </div>
+                    </div>
+
+                    <div class="builder-dash-cards">
+                        
+                        <!-- Card 1: Customize -->
+                        <div class="b-card b-card-customize" id="goCustomize">
+                            <div class="b-card-badge">1</div>
+                            <div class="b-card-art">
+                                <div class="b-art-glow pink-glow"></div>
+                                <div class="b-art-box">
+                                    <i class="ph-fill ph-package"></i>
+                                    <i class="ph-fill ph-image b-art-float b-float-1"></i>
+                                    <i class="ph-fill ph-file-text b-art-float b-float-2"></i>
+                                    <i class="ph-fill ph-video-camera b-art-float b-float-3"></i>
+                                </div>
+                            </div>
+                            <h3>Customize the Vault</h3>
+                            <p>Add messages, memories, letters and make it truly special.</p>
+                            <button class="b-card-btn b-btn-pink">Customize Now <i class="ph ph-arrow-right"></i></button>
+                        </div>
+
+                        <!-- Card 2: Preview -->
+                        <div class="b-card b-card-preview" id="goPreview">
+                            <div class="b-card-badge">2</div>
+                            <div class="b-card-art">
+                                <div class="b-art-glow blue-glow"></div>
+                                <div class="b-art-screen">
+                                    <div class="b-art-screen-inner">
+                                        <i class="ph-fill ph-image b-art-float b-float-4"></i>
+                                        <i class="ph-fill ph-envelope-simple b-art-float b-float-5"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3>Preview the Vault</h3>
+                            <p>See exactly how your vault will look to your loved one.</p>
+                            <button class="b-card-btn b-btn-blue">Preview Vault <i class="ph ph-arrow-right"></i></button>
+                        </div>
+
+                        <!-- Card 3: Passkey -->
+                        <div class="b-card b-card-passkey" id="goPasskey">
+                            <div class="b-card-badge">3</div>
+                            <div class="b-card-art">
+                                <div class="b-art-glow teal-glow"></div>
+                                <div class="b-art-shield">
+                                    <i class="ph-fill ph-shield-check b-art-shield-icon"></i>
+                                    <div class="b-art-passbar">
+                                        <span class="dots">•••••••</span>
+                                        <i class="ph-fill ph-eye"></i>
+                                        <i class="ph ph-copy b-art-copy"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3>View Passkey</h3>
+                            <p>View and copy your passkey to share the vault.</p>
+                            <button class="b-card-btn b-btn-teal">View Passkey <i class="ph ph-arrow-right"></i></button>
+                        </div>
+
+                        <!-- Card 4: Collaborate -->
+                        <div class="b-card b-card-collab" id="goCollab">
+                            <div class="b-card-badge">4</div>
+                            <div class="b-card-art">
+                                <div class="b-art-glow purple-glow"></div>
+                                <div class="b-art-shield">
+                                    <i class="ph-fill ph-users b-art-shield-icon"></i>
+                                    <div class="b-art-passbar">
+                                        <span class="dots" id="collabKeyDisplay">•••••••</span>
+                                        <i class="ph ph-copy b-art-copy" id="copyCollabKey"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3>Invite Friends</h3>
+                            <p>Share your collab key so friends can add their own memories.</p>
+                            <button class="b-card-btn b-btn-purple">Copy Collab Key <i class="ph ph-arrow-right"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="builder-dash-footer">
+                        <div class="b-footer-chip">
+                            <i class="ph-fill ph-shield-check"></i> Your vault is secure. Only those with the passkey can unlock it.
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+
+            <!-- ── Countdown View ──────────────────────────────────────── -->
+            <main class="main-content" id="view-countdown" style="display:none; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+                <div class="vault-handle" style="margin-bottom: 2rem;">
+                    <i class="ph ph-lock-key"></i>
+                </div>
+                <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: #fff; font-family: var(--font-serif); letter-spacing: -0.02em; text-align: center;" id="countdownTitle">A Special Memory</h2>
+                <p style="color: rgba(255,255,255,0.7); text-align: center; max-width: 500px; margin-bottom: 3rem;">This vault is heavily encrypted and time-locked. It cannot be opened until the designated time.</p>
+                
+                <div class="countdown-timer" id="countdownTimer" style="display: flex; gap: 2rem; justify-content: center;">
+                    <div class="time-block" style="display: flex; flex-direction: column; align-items: center;">
+                        <span class="time-val" id="cdDays" style="font-size: 4rem; font-family: var(--font-serif); font-variant-numeric: tabular-nums; color: #c026d3; text-shadow: 0 0 20px rgba(192,38,211,0.5);">00</span>
+                        <span class="time-label" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5);">Days</span>
+                    </div>
+                    <div class="time-block" style="display: flex; flex-direction: column; align-items: center;">
+                        <span class="time-val" id="cdHours" style="font-size: 4rem; font-family: var(--font-serif); font-variant-numeric: tabular-nums; color: #e879f9; text-shadow: 0 0 20px rgba(232,121,249,0.5);">00</span>
+                        <span class="time-label" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5);">Hours</span>
+                    </div>
+                    <div class="time-block" style="display: flex; flex-direction: column; align-items: center;">
+                        <span class="time-val" id="cdMins" style="font-size: 4rem; font-family: var(--font-serif); font-variant-numeric: tabular-nums; color: #818cf8; text-shadow: 0 0 20px rgba(129,140,248,0.5);">00</span>
+                        <span class="time-label" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5);">Minutes</span>
+                    </div>
+                    <div class="time-block" style="display: flex; flex-direction: column; align-items: center;">
+                        <span class="time-val" id="cdSecs" style="font-size: 4rem; font-family: var(--font-serif); font-variant-numeric: tabular-nums; color: #6366f1; text-shadow: 0 0 20px rgba(99,102,241,0.5);">00</span>
+                        <span class="time-label" style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5);">Seconds</span>
+                    </div>
+                </div>
+                
+                <button class="secondary-btn" style="margin-top: 4rem;" onclick="showView('home')">Back to Home</button>
+            </main>
+
+            <!-- ── Customize the Vault view ────────────────────────────── -->
+            <main class="main-content builder-view" id="view-customize" style="display:none; flex-direction: column;">
+                <div class="builder-page-header" style="flex-direction: column; align-items: flex-start; margin-bottom: 2rem; width: 100%; max-width: 800px; margin: 0 auto 2rem auto;">
+                    <button class="back-btn" data-back="true" style="margin-bottom: 2rem;"><i class="ph ph-arrow-left"></i> Back</button>
+                    <div class="builder-page-title">
+                        <div class="builder-page-icon" style="color: #e879f9; text-shadow: 0 0 15px rgba(217,70,239,0.5);"><i class="ph-fill ph-magic-wand"></i></div>
+                        <div>
+                            <h2>Craft Your Vault</h2>
+                            <p style="color: var(--text-secondary);">Take your time. Fill this vault with memories they will cherish.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="customize-hub-list">
+                    
+                    <div class="c-hub-card" id="addBdayMsgBtn">
+                        <div class="c-hub-icon"><i class="ph-fill ph-envelope"></i></div>
+                        <div class="c-hub-text">
+                            <h4>Wish</h4>
+                            <p>Write the main message they'll see when the vault opens.</p>
+                        </div>
+                        <div class="c-hub-status" id="bdayMsgStatus">Unstarted</div>
+                        <button class="c-hub-preview-btn" id="previewWishBtn" onclick="event.stopPropagation()"><i class="ph ph-eye"></i> Preview</button>
+                        <i class="ph ph-caret-right c-hub-arrow"></i>
+                    </div>
+
+                    <div class="c-hub-card" id="addMemoriesBtn">
+                        <div class="c-hub-icon"><i class="ph-fill ph-images"></i></div>
+                        <div class="c-hub-text">
+                            <h4>Moments &amp; Memories</h4>
+                            <p>Upload photos, videos, and audios to bring the vault to life.</p>
+                        </div>
+                        <div class="c-hub-status" id="memoriesCountStatus">0 Added</div>
+                        <button class="c-hub-preview-btn" id="previewMemoriesBtn" onclick="event.stopPropagation()"><i class="ph ph-eye"></i> Preview</button>
+                        <i class="ph ph-caret-right c-hub-arrow"></i>
+                    </div>
+
+                    <div class="c-hub-card" id="addLettersBtn">
+                        <div class="c-hub-icon"><i class="ph-fill ph-scroll"></i></div>
+                        <div class="c-hub-text">
+                            <h4>Personal Letters</h4>
+                            <p>Seal away private notes for them to read.</p>
+                        </div>
+                        <div class="c-hub-status" id="lettersCountStatus">0 Notes</div>
+                        <button class="c-hub-preview-btn" id="previewLettersBtn" onclick="event.stopPropagation()"><i class="ph ph-eye"></i> Preview</button>
+                        <i class="ph ph-caret-right c-hub-arrow"></i>
+                    </div>
+
+                    <div class="c-hub-card" id="addSongBtn">
+                        <div class="c-hub-icon"><i class="ph-fill ph-music-notes"></i></div>
+                        <div class="c-hub-text">
+                            <h4>Soundtrack</h4>
+                            <p>Add songs that play when they open the vault.</p>
+                        </div>
+                        <div class="c-hub-status" id="songStatus">0 Songs</div>
+                        <button class="c-hub-preview-btn" id="previewSoundtrackBtn" onclick="event.stopPropagation()"><i class="ph ph-eye"></i> Preview</button>
+                        <i class="ph ph-caret-right c-hub-arrow"></i>
+                    </div>
+
+                    <div class="c-hub-card" id="addVoiceNoteBtn">
+                        <div class="c-hub-icon"><i class="ph-fill ph-microphone"></i></div>
+                        <div class="c-hub-text">
+                            <h4>Voice Notes</h4>
+                            <p>Record audio messages for them to hear.</p>
+                        </div>
+                        <div class="c-hub-status" id="voiceNotesStatus">0 Notes</div>
+                        <i class="ph ph-caret-right c-hub-arrow"></i>
+                    </div>
+
+                    <div class="c-hub-card" id="designVaultBtn">
+                        <div class="c-hub-icon"><i class="ph-fill ph-gear"></i></div>
+                        <div class="c-hub-text">
+                            <h4>Vault Settings</h4>
+                            <p>Set a name, theme, and optional time lock.</p>
+                        </div>
+                        <div class="c-hub-status">Optional</div>
+                        <i class="ph ph-caret-down c-hub-arrow"></i>
+                    </div>
+                    
+                    <div style="margin-top: 2.5rem; display: flex; justify-content: center; width: 100%;">
+                        <button class="primary-btn glow-btn" id="saveVaultFinalBtn" style="padding: 1rem 3rem; font-size: 1.1rem; width: 100%; justify-content: center;">
+                            <i class="ph-fill ph-lock-key" style="margin-right: 0.5rem;"></i> Save Vault
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- ── Soundtrack Playlist Modal (Multi-song) ───────────────── -->
+                <div id="soundtrackModal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); align-items:center; justify-content:center;">
+                    <div style="background:linear-gradient(145deg,#1a0d2e,#120a22); border:1px solid rgba(232,121,249,0.25); border-radius:24px; padding:2rem; width:min(520px,94vw); max-height:90vh; overflow-y:auto; position:relative; box-shadow:0 30px 80px rgba(0,0,0,0.6), 0 0 40px rgba(217,70,239,0.1);">
+                        <!-- Close -->
+                        <button id="soundtrackModalClose" style="position:absolute;top:1.2rem;right:1.2rem;background:rgba(255,255,255,0.06);border:none;border-radius:50%;width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:1rem;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+                            <i class="ph ph-x"></i>
+                        </button>
+                        <!-- Header -->
+                        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.75rem;">
+                            <div style="width:3rem;height:3rem;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#c026d3);display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 0 20px rgba(192,38,211,0.4);flex-shrink:0;">
+                                <i class="ph-fill ph-music-notes" style="color:#fff;"></i>
+                            </div>
+                            <div>
+                                <h3 style="margin:0;font-size:1.15rem;">Vault Soundtrack</h3>
+                                <p style="margin:0;color:var(--text-secondary);font-size:0.82rem;">MP3 playlist · plays when they open the vault</p>
+                            </div>
+                        </div>
+                        <!-- Playlist manager -->
+                        <div class="dvp-playlist-manager" id="soundtrackPlaylistManager"></div>
+                        <!-- Drop zone to add more -->
+                        <button class="dvp-upload-more" id="soundtrackAddMoreBtn">
+                            <i class="ph ph-upload-simple"></i> Add MP3 Songs
+                        </button>
+                        <input type="file" id="soundtrackFileInput" accept=".mp3,audio/mpeg" style="display:none;" multiple>
+                        <!-- Hidden audio for preview in modal -->
+                        <audio id="soundtrackModalAudio" style="display:none;"></audio>
+                        <!-- Save -->
+                        <button id="soundtrackSaveBtn" style="margin-top:1.5rem;width:100%;padding:0.85rem;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#c026d3);border:none;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                            <i class="ph-fill ph-check-circle" style="margin-right:0.4rem;"></i> Save Playlist
+                        </button>
+                    </div>
+                </div>
+                <!-- ── End Soundtrack Modal ─────────────────────────────────── -->
+
+                <div class="builder-page-body" id="designVaultPanel" style="display:none; margin-top:2rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top:2rem; width:100%; max-width:800px; margin-left:auto; margin-right:auto;">
+                    <!-- Theme picker -->
+                    <div class="builder-section">
+                        <h3 class="builder-section-title"><i class="ph ph-palette"></i> Vault Theme</h3>
+                        <div class="theme-grid">
+                            <div class="theme-swatch active" data-theme="aurora" title="Aurora">
+                                <div class="swatch-preview" style="background: linear-gradient(135deg,#6b21a8,#c026d3,#4f46e5);"></div>
+                                <span>Aurora</span>
+                                <i class="ph ph-check-circle swatch-check"></i>
+                            </div>
+                            <div class="theme-swatch" data-theme="sunset" title="Sunset">
+                                <div class="swatch-preview" style="background: linear-gradient(135deg,#ea580c,#f59e0b,#ec4899);"></div>
+                                <span>Sunset</span>
+                                <i class="ph ph-check-circle swatch-check"></i>
+                            </div>
+                            <div class="theme-swatch" data-theme="ocean" title="Ocean">
+                                <div class="swatch-preview" style="background: linear-gradient(135deg,#0369a1,#06b6d4,#0d9488);"></div>
+                                <span>Ocean</span>
+                                <i class="ph ph-check-circle swatch-check"></i>
+                            </div>
+                            <div class="theme-swatch" data-theme="rose" title="Rose Gold">
+                                <div class="swatch-preview" style="background: linear-gradient(135deg,#be185d,#f43f5e,#fda4af);"></div>
+                                <span>Rose Gold</span>
+                                <i class="ph ph-check-circle swatch-check"></i>
+                            </div>
+                            <div class="theme-swatch" data-theme="forest" title="Forest">
+                                <div class="swatch-preview" style="background: linear-gradient(135deg,#15803d,#4ade80,#a3e635);"></div>
+                                <span>Forest</span>
+                                <i class="ph ph-check-circle swatch-check"></i>
+                            </div>
+                            <div class="theme-swatch" data-theme="midnight" title="Midnight">
+                                <div class="swatch-preview" style="background: linear-gradient(135deg,#1e1b4b,#312e81,#4338ca);"></div>
+                                <span>Midnight</span>
+                                <i class="ph ph-check-circle swatch-check"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vault name -->
+                    <div class="builder-section">
+                        <h3 class="builder-section-title"><i class="ph ph-pencil-simple"></i> Vault Name</h3>
+                        <div class="builder-input-row">
+                            <input type="text" class="builder-input" id="vaultNameInput" placeholder="e.g. Sarah's Birthday 2026" maxlength="50">
+                            <button class="builder-save-btn" id="saveVaultName"><i class="ph ph-floppy-disk"></i> Save</button>
+                        </div>
+                    </div>
+
+                    <!-- Unlock Date -->
+                    <div class="builder-section">
+                        <h3 class="builder-section-title"><i class="ph ph-hourglass-high"></i> Unlock Date (Optional)</h3>
+                        <div class="builder-input-row" style="flex-direction: column; align-items: stretch; gap: 0.5rem;">
+                            <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 0.5rem;">If set, anyone entering the passkey before this time will see a cinematic countdown.</p>
+                            <div style="display: flex; gap: 1rem;">
+                                <input type="datetime-local" class="builder-input" id="vaultUnlockDateInput" style="flex: 1;">
+                                <button class="builder-save-btn" id="saveVaultUnlockDate"><i class="ph ph-floppy-disk"></i> Save</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cover emoji -->
+                    <div class="builder-section">
+                        <h3 class="builder-section-title"><i class="ph ph-smiley"></i> Cover Emoji</h3>
+                        <div class="emoji-grid">
+                            <button class="emoji-btn active" data-emoji="🎂">🎂</button>
+                            <button class="emoji-btn" data-emoji="🎉">🎉</button>
+                            <button class="emoji-btn" data-emoji="💝">💝</button>
+                            <button class="emoji-btn" data-emoji="🌸">🌸</button>
+                            <button class="emoji-btn" data-emoji="✨">✨</button>
+                            <button class="emoji-btn" data-emoji="🦋">🦋</button>
+                            <button class="emoji-btn" data-emoji="🌙">🌙</button>
+                            <button class="emoji-btn" data-emoji="⭐">⭐</button>
+                        </div>
+                    </div>
+
+                    <button class="primary-btn builder-apply-btn" id="applyCustomizationBtn">
+                        <i class="ph ph-check"></i> Apply Customization
+                    </button>
+                </div>
+            </main>
+
+            <!-- ── Add Birthday Message view ───────────────────────────── -->
+            <main class="main-content builder-view" id="view-bday-message" style="display:none; position:relative;">
+                <div class="msg-particles"></div>
+                <div class="msg-desk-container">
+                    <div class="msg-header-bar">
+                        <button class="back-btn msg-back-btn" id="bdayMsgBackBtn"><i class="ph ph-arrow-left"></i> Back to Vault</button>
+                    </div>
+                    
+                    <div class="msg-letter-wrapper">
+                        <div class="msg-ambient-glow"></div>
+                        <div class="msg-letter-paper">
+                            <div class="msg-letter-header">
+                                <i class="ph-fill ph-envelope-heart"></i>
+                                <span>Wish</span>
+                                <div class="msg-auto-save" id="msgAutoSave"><i class="ph ph-spinner-gap"></i> Saving...</div>
+                            </div>
+                            <textarea class="msg-textarea" id="bdayMsgInput" placeholder="Start writing something they'll remember forever..."></textarea>
+                            <div class="msg-letter-footer">
+                                <button class="msg-save-btn" id="saveBdayMsgBtn"><i class="ph-fill ph-check"></i> Save Message</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- ── Add Personal Letters view ───────────────────────────── -->
+            <main class="main-content builder-view" id="view-letters" style="display:none; position:relative;">
+                <div class="msg-particles"></div>
+                <div class="msg-desk-container" style="flex-direction:column;align-items:center;">
+                    <div class="msg-header-bar" style="align-self:flex-start;">
+                        <button class="back-btn msg-back-btn" id="lettersBackBtn"><i class="ph ph-arrow-left"></i> Back to Vault</button>
+                    </div>
+                    
+                    <!-- Letters List Panel -->
+                    <div id="lettersListPanel" style="width:100%;max-width:680px;margin:0 auto 2rem;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+                            <h3 style="font-size:1.2rem;margin:0;"><i class="ph-fill ph-scroll" style="color:#e879f9;margin-right:0.5rem;"></i>Personal Letters</h3>
+                            <span id="lettersCountBadge" style="font-size:0.82rem;color:var(--text-secondary);">0 letters</span>
+                        </div>
+                        <div id="lettersList"><!-- letter items injected here --></div>
+                        <button class="dvp-add-letter-btn" id="addNewLetterBtn"><i class="ph ph-plus"></i> Add a Letter</button>
+                    </div>
+
+                    <!-- Letter Compose Panel -->
+                    <div id="lettersComposePanel" style="display:none;width:100%;max-width:680px;margin:0 auto;">
+                        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;">
+                            <button class="back-btn msg-back-btn" id="lettersComposeBackBtn"><i class="ph ph-arrow-left"></i> Back to Letters</button>
+                            <span id="lettersComposeTitle" style="font-size:1rem;color:var(--text-secondary);">New Letter</span>
+                        </div>
+                        <div class="msg-letter-wrapper" style="position:relative;">
+                            <div class="msg-ambient-glow"></div>
+                            <div class="msg-letter-paper">
+                                <div class="msg-letter-header">
+                                    <i class="ph-fill ph-scroll"></i>
+                                    <span>Personal Letter</span>
+                                    <div class="msg-auto-save" id="lettersAutoSave"><i class="ph ph-spinner-gap"></i> Saving...</div>
+                                </div>
+                                <input type="text" class="builder-input" id="letterTitleInput" placeholder="Letter title (optional)" style="margin-bottom:0.75rem;background:transparent;border:none;border-bottom:1px solid rgba(255,255,255,0.1);border-radius:0;padding:0.5rem 0;font-size:1rem;color:var(--text-primary);" maxlength="80">
+                                <textarea class="msg-textarea" id="lettersInput" placeholder="Write a personal note they can read later..."></textarea>
+                                <div class="msg-letter-footer">
+                                    <button class="msg-save-btn" id="magicDraftBtn" style="background: linear-gradient(135deg, #a855f7, #ec4899); margin-right: auto;"><i class="ph-fill ph-magic-wand"></i> Magic Draft (AI)</button>
+                                    <button class="msg-save-btn" id="saveLettersBtn"><i class="ph-fill ph-check"></i> Save Letter</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ── AI Letter Draft Modal ───────────────────────────────── -->
+                    <div id="aiLetterModal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); align-items:center; justify-content:center;">
+                        <div style="background:linear-gradient(145deg,#1a0d2e,#120a22); border:1px solid rgba(236,72,153,0.3); border-radius:24px; padding:2rem; width:min(520px,94vw); position:relative; box-shadow:0 30px 80px rgba(0,0,0,0.6), 0 0 40px rgba(236,72,153,0.15);">
+                            <button id="aiModalClose" style="position:absolute;top:1.2rem;right:1.2rem;background:rgba(255,255,255,0.06);border:none;border-radius:50%;width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:1rem;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+                                <i class="ph ph-x"></i>
+                            </button>
+                            <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;">
+                                <div style="width:3rem;height:3rem;border-radius:14px;background:linear-gradient(135deg,#a855f7,#ec4899);display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 0 20px rgba(236,72,153,0.4);flex-shrink:0;">
+                                    <i class="ph-fill ph-magic-wand" style="color:#fff;"></i>
+                                </div>
+                                <div>
+                                    <h3 style="margin:0;font-size:1.15rem;">Magic Draft</h3>
+                                    <p style="margin:0;color:var(--text-secondary);font-size:0.85rem;">Let AI help you find the right words.</p>
+                                </div>
+                            </div>
+                            
+                            <textarea id="aiBulletPoints" class="msg-textarea" placeholder="E.g. We met in college, you always make me laugh, I'm so proud of your new job..." style="min-height:120px; font-size:1rem; margin-bottom: 1rem; border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:1rem;"></textarea>
+                            
+                            <button id="aiGenerateBtn" style="width:100%;padding:0.85rem;border-radius:12px;background:linear-gradient(135deg,#a855f7,#ec4899);border:none;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                                <i class="ph-fill ph-sparkle" style="margin-right:0.4rem;"></i> Draft Letter
+                            </button>
+                            <div id="aiLoadingIndicator" style="display:none; text-align:center; color: #ec4899; font-size: 0.9rem; margin-top: 1rem;">
+                                <i class="ph ph-spinner-gap" style="animation: spin 1s linear infinite;"></i> Drafting your heartfelt letter...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- ── Voice Notes View ───────────────────────────── -->
+            <main class="main-content builder-view" id="view-voice-notes" style="display:none; flex-direction: column;">
+                <div class="msg-particles"></div>
+                <div class="msg-desk-container" style="align-items: center; justify-content: center;">
+                    <div class="msg-header-bar" style="position: absolute; top: 2rem; left: 2rem; width: auto;">
+                        <button class="nav-back-btn msg-back-btn" onclick="showView('customize')"><i class="ph ph-arrow-left"></i> Back to Builder</button>
+                    </div>
+
+                    <div class="msg-letter-wrapper" style="max-width: 500px; text-align: center;">
+                        <div class="msg-letter-content">
+                            <div class="msg-letter-header">
+                                <h3 style="font-size:1.2rem;margin:0;"><i class="ph-fill ph-microphone" style="color:#e879f9;margin-right:0.5rem;"></i>Record Voice Note</h3>
+                            </div>
+                            <div class="msg-letter-body" style="display:flex; flex-direction:column; align-items:center; gap: 2rem; padding: 2rem 0;">
+                                <div id="recordingTimer" style="font-size: 2.5rem; font-weight: 300; font-variant-numeric: tabular-nums; color: var(--text-primary);">00:00</div>
+                                
+                                <button id="recordBtn" style="width: 80px; height: 80px; border-radius: 50%; background: #ef4444; border: 4px solid rgba(239, 68, 68, 0.3); color: white; display:flex; align-items:center; justify-content:center; cursor: pointer; transition: all 0.2s; box-shadow: 0 0 20px rgba(239,68,68,0.5);">
+                                    <i class="ph-fill ph-microphone" style="font-size: 2rem;"></i>
+                                </button>
+                                
+                                <div id="recordingControls" style="display:none; gap: 1rem; width: 100%;">
+                                    <button class="msg-save-btn" id="discardRecordBtn" style="background: rgba(255,255,255,0.1); flex: 1;"><i class="ph-fill ph-trash"></i> Discard</button>
+                                    <button class="msg-save-btn" id="saveRecordBtn" style="flex: 1;"><i class="ph-fill ph-check"></i> Save Note</button>
+                                </div>
+                                <audio id="audioPlayback" controls style="display:none; width: 100%; margin-top: 1rem;"></audio>
+                                <div id="voiceNoteOrDivider" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary);">OR</div>
+                                <input type="file" id="voiceNoteUploadInput" accept="audio/*" style="display:none">
+                                <button id="voiceNoteUploadBtn" class="primary-btn" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); width: 100%;"><i class="ph ph-upload-simple"></i> Upload Audio File</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- ── Moments & Memories view ────────────────────────────── -->
+            <main class="main-content builder-view" id="view-memories" style="display:none; flex-direction: column;">
+                <div class="msg-particles"></div>
+                <div class="msg-desk-container" style="align-items: center; justify-content: center;">
+                    <div class="msg-header-bar" style="position: absolute; top: 2rem; left: 2rem; width: auto;">
+                        <button class="back-btn msg-back-btn" id="memoriesBackBtn"><i class="ph ph-arrow-left"></i> Back to Vault</button>
+                    </div>
+                    
+                    <div class="memories-hub-title" style="text-align: center; margin-bottom: 3rem; z-index: 1;">
+                        <i class="ph-fill ph-images" style="font-size: 3.5rem; color: #38bdf8; filter: drop-shadow(0 0 20px rgba(56,189,248,0.5));"></i>
+                        <h2 style="font-size: 2.5rem; margin-top: 1rem; color: #fff;">Choose Memories</h2>
+                        <p style="color: var(--text-secondary); font-size: 1.1rem; margin-top: 0.5rem;">Select the type of memories you want to add to your vault.</p>
+                    </div>
+
+                    <div class="memories-options-grid">
+                        <div class="memory-type-card" id="selectPhotosCard">
+                            <div class="m-card-icon"><i class="ph-fill ph-image"></i></div>
+                            <h3>Photos</h3>
+                            <p>Upload your favorite moments captured in pictures.</p>
+                            <button class="m-type-btn">Select Photos <i class="ph ph-arrow-right"></i></button>
+                        </div>
+                        <div class="memory-type-card" id="selectVideosCard">
+                            <div class="m-card-icon" style="color: #c026d3; background: rgba(192,38,211,0.1);"><i class="ph-fill ph-video-camera"></i></div>
+                            <h3>Videos</h3>
+                            <p>Upload video clips and moving memories.</p>
+                            <button class="m-type-btn">Select Videos <i class="ph ph-arrow-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Upload Panel (hidden by default) -->
+                    <div class="memories-upload-panel" id="uploadPanel" style="display:none; width: 100%; max-width: 900px; z-index: 1; flex-direction: column; align-items: center;">
+                        <div class="upload-panel-header" style="width: 100%; display: flex; align-items: center; justify-content: center; position: relative; margin-bottom: 2rem;">
+                            <button class="back-btn msg-back-btn" id="uploadBackBtn" style="position: absolute; left: 0;"><i class="ph ph-arrow-left"></i> Back</button>
+                            <h3 id="uploadPanelTitle" style="font-size: 1.5rem; color: #fff; margin: 0;">Upload Memories</h3>
+                        </div>
+
+                        <!-- Drag and Drop Zone -->
+                        <div class="upload-drop-zone" id="uploadDropZone" onclick="document.getElementById('mediaFileInput').click()">
+                            <input type="file" id="mediaFileInput" hidden multiple accept="image/*,video/*" />
+                            <div class="drop-zone-content">
+                                <i class="ph-fill ph-upload-simple upload-icon"></i>
+                                <h4>Select from Device</h4>
+                                <p>or drag &amp; drop files here</p>
+                                <button class="m-type-btn upload-browse-btn" style="pointer-events:none;">Browse Files</button>
+                            </div>
+                        </div>
+
+                        <!-- Gallery Grid for uploaded items -->
+                        <div class="upload-gallery-grid" id="uploadGalleryGrid">
+                            <!-- Items will be injected here -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- ── Preview the Vault view (legacy shell, kept for routing) ── -->
+            <main class="main-content builder-view" id="view-preview" style="display:none;">
+                <div class="builder-page-header">
+                    <button class="back-btn" data-back="true"><i class="ph ph-arrow-left"></i> Back</button>
+                    <div class="builder-page-title">
+                        <div class="builder-page-icon"><i class="ph ph-eye"></i></div>
+                        <div>
+                            <h2>Preview the Vault</h2>
+                            <p>This is exactly what your recipient will see</p>
+                        </div>
+                    </div>
+                    <!-- Customized-state badge -->
+                    <div class="preview-live-badge" id="previewLiveBadge">
+                        <i class="ph ph-check-circle"></i> Customized
+                    </div>
+                </div>
+
+                <!-- Full immersive vault render -->
+                <div class="vault-render" id="vaultRender" style="background: #000; border: none; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <!-- Hero banner — reflects chosen theme + emoji + name -->
+                    <div class="vr-hero" id="vrHero" style="background: transparent; padding: 0; box-shadow: none; border-radius: 0;">
+                        <!-- Using a stunning 3D model-viewer instead of a static image -->
+                        <model-viewer id="vaultHeroModel" 
+                                      src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+                                      ios-src=""
+                                      alt="3D Memory Vault"
+                                      auto-rotate 
+                                      camera-controls
+                                      ar 
+                                      ar-modes="webxr scene-viewer quick-look"
+                                      shadow-intensity="1"
+                                      exposure="1.2"
+                                      environment-image="neutral"
+                                      style="width: 400px; height: 400px; margin-bottom: 2rem; z-index: 2; position: relative; animation: floatVault 6s ease-in-out infinite; border-radius: 40px; box-shadow: 0 40px 60px -20px rgba(192, 38, 211, 0.4), 0 0 80px rgba(79, 70, 229, 0.3); background-color: rgba(0,0,0,0.2);">
+                            <!-- Custom AR Button -->
+                            <button slot="ar-button" class="primary-btn glow-btn" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 0.9rem; padding: 0.5rem 1.2rem; z-index: 10;">
+                                <i class="ph-fill ph-cube"></i> View in your room
+                            </button>
+                        </model-viewer>
+                        <style>
+                            @keyframes floatVault {
+                                0% { transform: translateY(0); }
+                                50% { transform: translateY(-20px); }
+                                100% { transform: translateY(0); }
+                            }
+                        </style>
+                        <h1 class="vr-title" id="vrTitle">Your Special Vault</h1>
+                        <p class="vr-subtitle">A curated collection of memories, sealed just for you</p>
+                        <div class="vr-lock-badge">
+                            <i class="ph ph-lock-key"></i>
+                            <span>Protected by Affinity</span>
+                        </div>
+                    </div>
+
+                    <!-- Vault body -->
+                    <div class="vr-body">
+                        <!-- Memory slots -->
+                        <div class="vr-section-label">
+                            <i class="ph ph-images"></i> Memories
+                        </div>
+                        <div class="vr-memory-grid">
+                            <div class="vr-memory-slot">
+                                <div class="vr-memory-blur"><i class="ph ph-lock"></i></div>
+                                <span>Memory 1</span>
+                            </div>
+                            <div class="vr-memory-slot">
+                                <div class="vr-memory-blur"><i class="ph ph-lock"></i></div>
+                                <span>Memory 2</span>
+                            </div>
+                            <div class="vr-memory-slot">
+                                <div class="vr-memory-blur"><i class="ph ph-lock"></i></div>
+                                <span>Memory 3</span>
+                            </div>
+                        </div>
+
+                        <!-- Unlock bar -->
+                        <div class="vr-unlock-strip" id="vrUnlockStrip">
+                            <i class="ph ph-key"></i>
+                            <div class="vr-unlock-text">
+                                <strong>Enter Passkey to Unlock</strong>
+                                <span>All memories are securely encrypted until the right key is entered</span>
+                            </div>
+                        </div>
+
+                        <!-- Vault meta strip -->
+                        <div class="vr-meta-strip">
+                            <div class="vr-meta-chip">
+                                <i class="ph ph-palette"></i>
+                                <span id="vrMetaTheme">Aurora</span>
+                            </div>
+                            <div class="vr-meta-chip">
+                                <i class="ph ph-text-aa"></i>
+                                <span id="vrMetaName">Your Special Vault</span>
+                            </div>
+                            <div class="vr-meta-chip">
+                                <i class="ph ph-shield-check"></i>
+                                <span>Secured</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- ── View Passkey view ───────────────────────────────────── -->
+            <main class="main-content builder-view" id="view-passkey" style="display:none;">
+                <div class="builder-page-header">
+                    <button class="back-btn" data-back="true"><i class="ph ph-arrow-left"></i> Back</button>
+                    <div class="builder-page-title">
+                        <div class="builder-page-icon"><i class="ph ph-key"></i></div>
+                        <div>
+                            <h2>View Passkey</h2>
+                            <p>Your vault's secret access key — keep it safe</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="passkey-page-body">
+                    <div class="passkey-reveal-card">
+                        <div class="passkey-lock-anim">
+                            <i class="ph ph-lock-key passkey-lock-icon"></i>
+                        </div>
+                        <p class="passkey-label">Your Passkey</p>
+                        <div class="passkey-value-row">
+                            <span class="passkey-value" id="passkeyValueDisplay">••••••••</span>
+                            <button class="passkey-eye-btn" id="togglePasskeyVisibility" title="Show / Hide">
+                                <i class="ph ph-eye" id="eyeIcon"></i>
+                            </button>
+                        </div>
+                        <button class="copy-passkey-large-btn" id="copyPasskeyLargeBtn">
+                            <i class="ph ph-copy" id="copyLargeIcon"></i>
+                            <span id="copyLargeText">Copy to Clipboard</span>
+                        </button>
+                        <div class="passkey-warning">
+                            <i class="ph ph-warning-circle"></i>
+                            <span>Never share this passkey with anyone you don't trust. It unlocks your vault permanently.</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- ── Legal Views ───────────────────────────────────────────── -->
+            <main class="main-content builder-view" id="view-privacy" style="display:none; flex-direction: column;">
+                <div class="msg-desk-container" style="max-width: 800px; margin: 0 auto; align-items: flex-start; padding: 2rem;">
+                    <div class="msg-header-bar" style="margin-bottom: 2rem;">
+                        <button class="back-btn msg-back-btn" onclick="showView('dashboard')"><i class="ph ph-arrow-left"></i> Back</button>
+                    </div>
+                    <div class="builder-page-title" style="margin-bottom: 2rem;">
+                        <h2 style="font-size: 2.5rem; margin-bottom: 1rem;"><i class="ph-fill ph-shield-check" style="color: #e879f9; margin-right: 0.5rem;"></i> Privacy Policy</h2>
+                    </div>
+                    <div style="color: var(--text-secondary); line-height: 1.8;">
+                        <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">1. Information We Collect</h3>
+                        <p>We collect information you provide directly to us, such as when you create an account, build a vault, upload memories, or communicate with us. This includes photos, videos, and personal letters.</p>
+                        <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">2. How We Use Information</h3>
+                        <p>We use the information we collect strictly to provide, maintain, and improve the Affinity Memory Vault service. Your memories are encrypted and securely stored.</p>
+                        <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">3. Data Security</h3>
+                        <p>We take reasonable measures to help protect information about you from loss, theft, misuse and unauthorized access, disclosure, alteration and destruction.</p>
+                    </div>
+                </div>
+            </main>
+
+            <main class="main-content builder-view" id="view-terms" style="display:none; flex-direction: column;">
+                <div class="msg-desk-container" style="max-width: 800px; margin: 0 auto; align-items: flex-start; padding: 2rem;">
+                    <div class="msg-header-bar" style="margin-bottom: 2rem;">
+                        <button class="back-btn msg-back-btn" onclick="showView('dashboard')"><i class="ph ph-arrow-left"></i> Back</button>
+                    </div>
+                    <div class="builder-page-title" style="margin-bottom: 2rem;">
+                        <h2 style="font-size: 2.5rem; margin-bottom: 1rem;"><i class="ph-fill ph-file-text" style="color: #e879f9; margin-right: 0.5rem;"></i> Terms of Service</h2>
+                    </div>
+                    <div style="color: var(--text-secondary); line-height: 1.8;">
+                        <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">1. Acceptance of Terms</h3>
+                        <p>By accessing or using our services, you agree to be bound by these Terms. If you do not agree to these Terms, do not use our services.</p>
+                        <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">2. User Content</h3>
+                        <p>You retain all rights and ownership to the memories you upload to the vault. You are responsible for ensuring you have the right to upload and share the content.</p>
+                        <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">3. Termination</h3>
+                        <p>We reserve the right to suspend or terminate your access to the service at any time for any reason, including violation of these Terms.</p>
+                    </div>
+                </div>
+            </main>
+
+            <main class="main-content builder-view" id="view-security" style="display:none; flex-direction: column;">
+                <div class="msg-desk-container" style="max-width: 800px; margin: 0 auto; align-items: flex-start; padding: 2rem;">
+                    <div class="msg-header-bar" style="margin-bottom: 2rem;">
+                        <button class="back-btn msg-back-btn" onclick="showView('dashboard')"><i class="ph ph-arrow-left"></i> Back</button>
+                    </div>
+                    <div class="builder-page-title" style="margin-bottom: 2rem;">
+                        <h2 style="font-size: 2.5rem; margin-bottom: 1rem;"><i class="ph-fill ph-lock-key" style="color: #e879f9; margin-right: 0.5rem;"></i> Security</h2>
+                    </div>
+                    <div style="color: var(--text-secondary); line-height: 1.8;">
+                        <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">1. End-to-End Encryption</h3>
+                        <p>All data stored within your vaults is heavily encrypted. We use industry-standard encryption protocols to ensure that your private memories remain private.</p>
+                        <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">2. Passkey Protection</h3>
+                        <p>Your vault is secured by a unique passkey. This passkey is never stored in plain text on our servers. If you lose your passkey, we cannot recover the memories inside the vault.</p>
+                        <h3 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem;">3. Time-Locked Security</h3>
+                        <p>For vaults with a countdown, the server rejects all decryption attempts until the specific server time matches the unlock time, preventing early access even if the passkey is known.</p>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="footer-content">
+                    <div class="footer-logo">Affinity</div>
+                    <div class="footer-links">
+                        <a href="javascript:void(0)" onclick="showView('privacy')">Privacy Policy</a>
+                        <a href="javascript:void(0)" onclick="showView('terms')">Terms of Service</a>
+                        <a href="javascript:void(0)" onclick="showView('security')">Security</a>
+                    </div>
+                    <div class="footer-copy">&copy; 2026 Affinity. All rights reserved.</div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // ── Mobile menu ───────────────────────────────────────────────────
+        document.getElementById('menuBtn')?.addEventListener('click', () => {
+            const nav = document.querySelector('.header-nav');
+            if (nav) nav.classList.toggle('mobile-open');
+        });
+
+        // ── Sidebar dropdown ──────────────────────────────────────────────
+        const createVaultToggle = document.getElementById('createVaultToggle');
+        const createVaultMenu   = document.getElementById('createVaultMenu');
+        if (createVaultToggle && createVaultMenu) {
+            createVaultToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                createVaultToggle.classList.toggle('dropdown-open');
+                createVaultMenu.classList.toggle('open');
+            });
+        }
+
+        // ── View registry ─────────────────────────────────────────────────
+        const VIEWS = {
+            dashboard : document.getElementById('view-dashboard'),
+            enter     : document.getElementById('view-enter-vault'),
+            affinityBuilder : document.getElementById('view-affinity-builder'),
+            customize : document.getElementById('view-customize'),
+            bdayMessage : document.getElementById('view-bday-message'),
+            letters   : document.getElementById('view-letters'),
+            memories  : document.getElementById('view-memories'),
+            voiceNotes: document.getElementById('view-voice-notes'),
+            preview   : document.getElementById('view-preview'),
+            passkey   : document.getElementById('view-passkey'),
+            countdown : document.getElementById('view-countdown'),
+            privacy   : document.getElementById('view-privacy'),
+            terms     : document.getElementById('view-terms'),
+            security  : document.getElementById('view-security'),
+        };
+
+        let viewHistory = ['dashboard'];
+        let isGoingBack = false;
+
+        function showView(name) {
+            if (!isGoingBack && viewHistory[viewHistory.length - 1] !== name) {
+                viewHistory.push(name);
+            }
+            isGoingBack = false;
+
+            Object.keys(VIEWS).forEach(k => {
+                if (VIEWS[k]) VIEWS[k].style.display = 'none';
+            });
+            if (VIEWS[name]) {
+                const isFlex = VIEWS[name].style.flexDirection === 'column' || name === 'dashboard';
+                VIEWS[name].style.display = isFlex ? 'flex' : 'block';
+                VIEWS[name].classList.remove('view-enter');
+                void VIEWS[name].offsetWidth;
+                VIEWS[name].classList.add('view-enter');
+            }
+        }
+
+        function goBack() {
+            if (viewHistory.length > 1) {
+                viewHistory.pop(); // Remove current view
+                isGoingBack = true;
+                showView(viewHistory[viewHistory.length - 1]);
+            } else {
+                isGoingBack = true;
+                showView('dashboard');
+            }
+        }
+
+        // ── Category Configuration ─────────────────────────────────────────
+        const CATEGORY_CONFIG = {
+            'birthday'    : { label: 'Birthday',      icon: 'ph-cake',       decors: ['ph-cake','ph-gift','ph-confetti'],       placeholder: 'Enter Birthday Passkey',    api: 'Birthday'    },
+            'anniversary' : { label: 'Anniversary',   icon: 'ph-heart',      decors: ['ph-heart','ph-rose','ph-star'],           placeholder: 'Enter Anniversary Passkey', api: 'Anniversary' },
+            'friendship'  : { label: 'Friendship',    icon: 'ph-users',      decors: ['ph-users','ph-hand-heart','ph-star'],     placeholder: 'Enter Friendship Passkey',  api: 'Friendship'  },
+            'family'      : { label: 'Family',        icon: 'ph-house',      decors: ['ph-house','ph-heart','ph-users'],         placeholder: 'Enter Family Passkey',      api: 'Family'      },
+            'surprise'    : { label: 'Just a Surprise', icon: 'ph-gift',     decors: ['ph-gift','ph-sparkle','ph-star'],         placeholder: 'Enter Surprise Passkey',    api: 'Surprise'    }
+        };
+
+        let currentCategory = 'birthday';
+
+        function applyCategory(catKey) {
+            currentCategory = catKey;
+            const cfg = CATEGORY_CONFIG[catKey] || CATEGORY_CONFIG['birthday'];
+
+            // Update title and description
+            const titleEl = document.getElementById('vaultCardTitle');
+            const descEl  = document.getElementById('vaultCardDesc');
+            if (titleEl) titleEl.textContent = cfg.label + ' Vault';
+            if (descEl)  descEl.textContent  = 'A special vault sealed just for your loved one.';
+
+            // Update passkey placeholder
+            const passInput = document.getElementById('birthdayPasskey');
+            if (passInput) passInput.placeholder = cfg.placeholder;
+
+            // Update decoration icons
+            ['vaultDecorIcon1','vaultDecorIcon2','vaultDecorIcon3'].forEach((id, i) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.className = 'ph-fill ' + cfg.decors[i];
+                }
+            });
+
+            // Update create button label
+            const btn = document.getElementById('openVaultBtn');
+            if (btn) btn.textContent = 'Create ' + cfg.label + ' Vault';
+        }
+
+        // ── Hash-based routing ────────────────────────────────────────────
+        function updateView() {
+            const hash = window.location.hash;
+            if (hash === '#enter-vault') {
+                showView('enter');
+                generateSparkles();
+                const passkeySection = document.getElementById('passkeySection');
+                const vaultSuccessContent = document.getElementById('vaultSuccessContent');
+                const passInput = document.getElementById('birthdayPasskey');
+                const openBtn = document.getElementById('openVaultBtn');
+                if (passkeySection) passkeySection.style.display = '';
+                if (vaultSuccessContent) vaultSuccessContent.style.display = 'none';
+                if (passInput) passInput.value = '';
+                if (openBtn) { openBtn.setAttribute('disabled','true'); openBtn.textContent = 'Unlock Vault'; }
+                
+                const titleEl = document.getElementById('vaultCardTitle');
+                const descEl  = document.getElementById('vaultCardDesc');
+                if (titleEl) titleEl.textContent = 'Enter Vault';
+                if (descEl)  descEl.textContent  = 'Enter your secure passkey to unlock your shared memory.';
+            } else if (hash.startsWith('#vault-')) {
+                const catKey = hash.replace('#vault-', '');
+                applyCategory(catKey);
+                VaultState.wish = ''; VaultState.memories = []; VaultState.letters = []; VaultState.soundtrack = [];
+                vaultState = VAULT_STATE.NOT_CUSTOMIZED;
+                
+                showView('enter');
+                generateSparkles();
+                const passkeySection = document.getElementById('passkeySection');
+                const vaultSuccessContent = document.getElementById('vaultSuccessContent');
+                const passInput = document.getElementById('birthdayPasskey');
+                const openBtn = document.getElementById('openVaultBtn');
+                
+                if (passkeySection) passkeySection.style.display = '';
+                if (vaultSuccessContent) vaultSuccessContent.style.display = 'none';
+                if (passInput) passInput.value = '';
+                if (openBtn) { openBtn.removeAttribute('disabled'); }
+            } else {
+                showView('dashboard');
+            }
+        }
+
+        // ── Sparkle generation ────────────────────────────────────────────
+        function generateSparkles() {
+            const container = document.getElementById('sparklesContainer');
+            if (!container || container.children.length > 0) return;
+            for (let i = 0; i < 30; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('sparkle');
+                sparkle.style.left = `${Math.random() * 100}%`;
+                sparkle.style.top  = `${Math.random() * 100}%`;
+                sparkle.style.animationDelay    = `${Math.random() * 5}s`;
+                sparkle.style.animationDuration = `${3 + Math.random() * 4}s`;
+                container.appendChild(sparkle);
+            }
+        }
+
+        // ── Passkey logic (vault creation) ────────────────────────────────
+        const birthdayPasskeyInput  = document.getElementById('birthdayPasskey');
+        const openVaultBtn          = document.getElementById('openVaultBtn');
+        const vaultErrorMsg         = document.getElementById('vaultErrorMsg');
+        const birthdayVaultCard     = document.getElementById('birthdayVaultCard');
+        const passkeySection        = document.getElementById('passkeySection');
+        const vaultSuccessContent   = document.getElementById('vaultSuccessContent');
+
+        // ── Vault State Machine ───────────────────────────────────────────
+        // Two states: NOT_CUSTOMIZED (default) and CUSTOMIZED (after Apply).
+        // Preview and Passkey views are gated behind CUSTOMIZED.
+        // Customize view is always accessible — it IS the setup step.
+        const VAULT_STATE = Object.freeze({
+            NOT_CUSTOMIZED: 'NOT_CUSTOMIZED',
+            CUSTOMIZED:     'CUSTOMIZED'
+        });
+        let vaultState    = VAULT_STATE.NOT_CUSTOMIZED;
+        let currentVaultId = null;
+        let currentCollabKey = null;
+        let currentPasskey = null;
+        let originalWish   = '';
+
+        // Snapshot of applied customization (set when user clicks Apply)
+        let appliedCustomization = null;
+
+        /**
+         * Gate: returns true when the vault is in CUSTOMIZED state.
+         * Otherwise shows the "not customized" modal and returns false.
+         */
+        function requireVaultCustomized(actionLabel) {
+            if (vaultState === VAULT_STATE.CUSTOMIZED) return true;
+            showVaultNotReadyModal(actionLabel);
+            return false;
+        }
+
+        /** Called once by vault creation — stores passkey, does NOT change vault state. */
+        function onVaultCreated(passkey, vaultId, collabKey) {
+            currentPasskey = passkey;
+            currentVaultId = vaultId;
+            currentCollabKey = collabKey;
+            const pvd = document.getElementById('passkeyValueDisplay');
+            if (pvd) pvd.dataset.real = passkey;
+            const ckd = document.getElementById('collabKeyDisplay');
+            if (ckd) ckd.textContent = collabKey || '•••••••';
+        }
+
+        /** Called when Apply Customization is clicked — transitions state to CUSTOMIZED. */
+        function transitionToCustomized(snap) {
+            vaultState           = VAULT_STATE.CUSTOMIZED;
+            appliedCustomization = snap;
+            if (typeof renderVaultPreview === 'function') renderVaultPreview();
+        }
+
+        if (birthdayPasskeyInput && openVaultBtn) {
+            birthdayPasskeyInput.addEventListener('input', (e) => {
+                openVaultBtn.toggleAttribute('disabled', e.target.value.length === 0);
+                vaultErrorMsg.classList.remove('show');
+                birthdayVaultCard.classList.remove('shake');
+            });
+
+            openVaultBtn.addEventListener('click', async () => {
+                const passkey = birthdayPasskeyInput.value.trim().toUpperCase();
+                
+                if (!passkey) {
+                    birthdayVaultCard.classList.add('shake');
+                    setTimeout(() => birthdayVaultCard.classList.remove('shake'), 500);
+                    return;
+                }
+
+                const hash = window.location.hash;
+                if (hash.startsWith('#vault-')) {
+                    // CREATION FLOW
+                    currentPasskey = passkey; // save it for later when they hit save
+                    passkeySection.style.display = 'none';
+                    vaultSuccessContent.style.display = 'block';
+                    birthdayVaultCard.classList.add('unlocked-burst');
+                    return;
+                }
+
+                // UNLOCK FLOW
+                openVaultBtn.setAttribute('disabled', 'true');
+                openVaultBtn.textContent = 'Verifying...';
+                vaultErrorMsg.classList.remove('show');
+
+                try {
+                    const response = await fetch('/api/vaults/verify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ passkey, user_id: currentUserId, user_name: currentUserName })
+                    });
+                    const data = await response.json();
+
+                    if (response.ok && data.valid) {
+                        // Fetch vault access data
+                        const accessRes = await fetch(`/api/vaults/access/${passkey}?user_id=${currentUserId}`);
+                        const accessData = await accessRes.json();
+                        
+                        // Map data to VaultState
+                        const v = accessData.vault;
+
+                        // Check if time-locked
+                        const now = new Date();
+                        let unlockDate = null;
+                        if (v.unlock_date) unlockDate = new Date(v.unlock_date);
+
+                        if (unlockDate && unlockDate > now) {
+                            // SHOW COUNTDOWN VIEW
+                            document.getElementById('countdownTitle').textContent = v.title;
+                            startCountdown(unlockDate);
+                            showView('countdown');
+                            birthdayVaultCard.classList.remove('unlocked-burst');
+                            openVaultBtn.removeAttribute('disabled');
+                            openVaultBtn.textContent = 'Unlock Vault';
+                            return; // Stop execution
+                        }
+
+                        applyCategory(v.category);
+                        selectedTheme = v.theme;
+                        vaultName = v.title;
+                        
+                        VaultState.participants = accessData.participants.reduce((acc, p) => { acc[p.user_id] = p.user_name; return acc; }, {});
+                        
+                        VaultState.wish = accessData.wishes.map(w => `${w.message}\n— ${VaultState.participants[w.user_id] || 'Unknown'}`).join('\n\n') || '';
+                        VaultState.memories = accessData.memories.map(m => ({ type: m.type, caption: m.title, url: m.file_url, user_id: m.user_id }));
+                        VaultState.letters = accessData.letters.map(l => ({ id: l.id, title: l.title, body: l.content, user_id: l.user_id }));
+                        VaultState.soundtrack = accessData.soundtracks.map(s => ({ id: s.id, name: s.title, url: s.file_url, duration: s.duration, user_id: s.user_id }));
+                        
+                        onVaultCreated(passkey, data.vaultId, accessData.collab_key);
+                        birthdayVaultCard.classList.add('unlocked-burst');
+
+                        setTimeout(() => {
+                            transitionToCustomized({ theme: selectedTheme, emoji: selectedEmoji, name: vaultName });
+                            if (data.isCollab) {
+                                // For collaborators, hide the Vault Settings card and show Builder
+                                const settingsCard = document.getElementById('designVaultBtn');
+                                if (settingsCard) settingsCard.style.display = 'none';
+                                showView('affinity-builder');
+                            } else {
+                                showView('dashboard');
+                                openDVP('full');
+                            }
+                        }, 1500);
+                    } else {
+                        throw new Error(data.error || 'Invalid passkey');
+                    }
+                } catch (err) {
+                    vaultErrorMsg.textContent = err.message || 'Could not connect to server';
+                    vaultErrorMsg.classList.add('show');
+                    birthdayVaultCard.classList.remove('shake');
+                    void birthdayVaultCard.offsetWidth;
+                    birthdayVaultCard.classList.add('shake');
+                } finally {
+                    openVaultBtn.removeAttribute('disabled');
+                    openVaultBtn.textContent = 'Unlock Vault';
+                }
+            });
+        }
+
+        // ── Countdown Timer Logic ─────────────────────────────────────────
+        let countdownInterval;
+        function startCountdown(targetDate) {
+            if (countdownInterval) clearInterval(countdownInterval);
+            
+            const updateTimer = () => {
+                const now = new Date().getTime();
+                const distance = targetDate.getTime() - now;
+
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('cdDays').textContent = '00';
+                    document.getElementById('cdHours').textContent = '00';
+                    document.getElementById('cdMins').textContent = '00';
+                    document.getElementById('cdSecs').textContent = '00';
+                    showToast('The vault is ready to open!');
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('cdDays').textContent = String(days).padStart(2, '0');
+                document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('cdMins').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('cdSecs').textContent = String(seconds).padStart(2, '0');
+            };
+            
+            updateTimer();
+            countdownInterval = setInterval(updateTimer, 1000);
+        }
+
+        // ── Affinity Builder Navigation ───────────────────────────────────
+        const builderCard = document.getElementById('affinityBuilderCard');
+        if (builderCard) {
+            builderCard.addEventListener('click', () => {
+                showView('affinityBuilder');
+            });
+        }
+
+        // ── Navigate to builder sub-views (state-gated) ───────────────────
+        document.getElementById('goCustomize').addEventListener('click', () => {
+            // Always accessible — this IS the customization step
+            showView('customize');
+        });
+
+        // Add Memories Navigation
+        const addMemoriesBtn = document.getElementById('addMemoriesBtn');
+        if (addMemoriesBtn) {
+            addMemoriesBtn.addEventListener('click', () => {
+                showView('memories');
+            });
+        }
+
+        const memoriesBackBtn = document.getElementById('memoriesBackBtn');
+        if (memoriesBackBtn) {
+            memoriesBackBtn.addEventListener('click', () => {
+                showView('customize');
+            });
+        }
+
+        // Upload Panel Logic
+        const selectPhotosCard = document.getElementById('selectPhotosCard');
+        const selectVideosCard = document.getElementById('selectVideosCard');
+        const memoriesOptionsGrid = document.querySelector('.memories-options-grid');
+        const memoriesHubTitle = document.querySelector('.memories-hub-title');
+        const uploadPanel = document.getElementById('uploadPanel');
+        const uploadPanelTitle = document.getElementById('uploadPanelTitle');
+        const uploadBackBtn = document.getElementById('uploadBackBtn');
+        const mediaFileInput = document.getElementById('mediaFileInput');
+        const uploadGalleryGrid = document.getElementById('uploadGalleryGrid');
+        
+        function openUploadPanel(type) {
+            memoriesOptionsGrid.style.display = 'none';
+            memoriesHubTitle.style.display = 'none';
+            uploadPanel.style.display = 'flex';
+            
+            if (type === 'photos') {
+                uploadPanelTitle.textContent = 'Upload Photos';
+                mediaFileInput.accept = 'image/*';
+            } else {
+                uploadPanelTitle.textContent = 'Upload Videos';
+                mediaFileInput.accept = 'video/*';
+            }
+        }
+
+        if (selectPhotosCard) selectPhotosCard.addEventListener('click', () => openUploadPanel('photos'));
+        if (selectVideosCard) selectVideosCard.addEventListener('click', () => openUploadPanel('videos'));
+        
+        if (uploadBackBtn) {
+            uploadBackBtn.addEventListener('click', () => {
+                uploadPanel.style.display = 'none';
+                memoriesOptionsGrid.style.display = 'flex';
+                memoriesHubTitle.style.display = 'block';
+            });
+        }
+
+        if (mediaFileInput) {
+            mediaFileInput.addEventListener('change', (e) => {
+                const files = e.target.files;
+                if (!files || files.length === 0) return;
+
+                Array.from(files).forEach(file => {
+                    const item = document.createElement('div');
+                    item.className = 'memory-gallery-item';
+                    
+                    const shimmer = document.createElement('div');
+                    shimmer.className = 'memory-gallery-shimmer';
+                    item.appendChild(shimmer);
+                    uploadGalleryGrid.appendChild(item);
+
+                    // Simulate upload delay for emotion
+                    setTimeout(() => {
+                        const url = URL.createObjectURL(file);
+                        let mediaEl;
+                        if (file.type.startsWith('image/')) {
+                            mediaEl = document.createElement('img');
+                        } else {
+                            mediaEl = document.createElement('video');
+                            mediaEl.muted = true;
+                            mediaEl.autoplay = true;
+                            mediaEl.loop = true;
+                        }
+                        mediaEl.src = url;
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'memory-remove-btn';
+                        removeBtn.innerHTML = '<i class="ph ph-x"></i>';
+                        removeBtn.onclick = () => item.remove();
+
+                        const captionOverlay = document.createElement('div');
+                        captionOverlay.className = 'memory-caption-overlay';
+                        captionOverlay.innerHTML = '<input type="text" class="memory-caption-input" placeholder="Add a memory..." />';
+                        
+                        item.innerHTML = '';
+                        item.appendChild(mediaEl);
+                        item.appendChild(removeBtn);
+                        item.appendChild(captionOverlay);
+                        
+                        showToast('Memory added to the vault ✨');
+                    }, 1500); // 1.5s artificial delay for shimmer
+                });
+            });
+        }
+
+        // Add Birthday Message Navigation
+        const addBdayMsgBtn = document.getElementById('addBdayMsgBtn');
+        if (addBdayMsgBtn) {
+            addBdayMsgBtn.addEventListener('click', () => {
+                showView('bdayMessage');
+                setTimeout(() => document.getElementById('bdayMsgInput')?.focus(), 500);
+            });
+        }
+
+        const bdayMsgBackBtn = document.getElementById('bdayMsgBackBtn');
+        if (bdayMsgBackBtn) {
+            bdayMsgBackBtn.addEventListener('click', () => {
+                showView('customize');
+            });
+        }
+
+        const saveBdayMsgBtn = document.getElementById('saveBdayMsgBtn');
+        if (saveBdayMsgBtn) {
+            saveBdayMsgBtn.addEventListener('click', () => {
+                const status = document.getElementById('bdayMsgStatus');
+                const input = document.getElementById('bdayMsgInput');
+                if (status && input) {
+                    if (input.value.trim().length > 0) {
+                        status.innerHTML = '<i class="ph-fill ph-check-circle" style="color:#4ade80;"></i> Saved';
+                        status.classList.add('completed-status');
+                    } else {
+                        status.innerHTML = 'Unstarted';
+                        status.classList.remove('completed-status');
+                    }
+                }
+                showView('customize');
+                showToast('Message Saved ✨');
+            });
+        }
+
+        const addLettersBtn = document.getElementById('addLettersBtn');
+        if (addLettersBtn) {
+            addLettersBtn.addEventListener('click', () => {
+                showView('letters');
+                setTimeout(() => document.getElementById('lettersInput')?.focus(), 500);
+            });
+        }
+
+        const lettersBackBtn = document.getElementById('lettersBackBtn');
+        if (lettersBackBtn) {
+            lettersBackBtn.addEventListener('click', () => {
+                showView('customize');
+            });
+        }
+
+        const saveLettersBtn = document.getElementById('saveLettersBtn');
+        if (saveLettersBtn) {
+            saveLettersBtn.addEventListener('click', () => {
+                const input = document.getElementById('lettersInput');
+                // You can add status updates here if needed, like the birthday message
+                showView('customize');
+                showToast('Letter Saved ✨');
+            });
+        }
+
+        const saveVaultFinalBtn = document.getElementById('saveVaultFinalBtn');
+        if (saveVaultFinalBtn) {
+            saveVaultFinalBtn.addEventListener('click', async () => {
+                const btn = saveVaultFinalBtn;
+                btn.textContent = 'Saving...';
+                btn.disabled = true;
+                
+                try {
+                    // Upload all NEW memory files
+                    for (let mem of VaultState.memories) {
+                        if (mem.file && !mem.file_url) {
+                            const fd = new FormData();
+                            fd.append('file', mem.file);
+                            const res = await fetch('/api/vaults/upload', { method: 'POST', body: fd });
+                            const data = await res.json();
+                            mem.file_url = data.file_url;
+                        }
+                    }
+                    
+                    // Upload all NEW soundtrack files
+                    for (let track of VaultState.soundtrack) {
+                        if (track.file && !track.file_url) {
+                            const fd = new FormData();
+                            fd.append('file', track.file);
+                            const res = await fetch('/api/vaults/upload', { method: 'POST', body: fd });
+                            const data = await res.json();
+                            track.file_url = data.file_url;
+                        }
+                    }
+                    
+                    const nameVal = document.getElementById('vaultNameInput')?.value.trim() || vaultName;
+                    vaultName = nameVal;
+
+                    const dateInput = document.getElementById('vaultUnlockDateInput')?.value;
+                    if (dateInput) {
+                        selectedUnlockDate = new Date(dateInput).toISOString();
+                    }
+
+                    if (!currentVaultId) {
+                        // CREATE NEW VAULT
+                        const payload = {
+                            title: nameVal,
+                            category: currentCategory,
+                            theme: selectedTheme,
+                            user_id: currentUserId,
+                            user_name: currentUserName,
+                            passkey: currentPasskey,
+                            unlock_date: selectedUnlockDate
+                        };
+                        
+                        const createRes = await fetch('/api/vaults', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        const createData = await createRes.json();
+                        
+                        if (!createRes.ok) {
+                            if (createRes.status === 409) {
+                                const newPasskey = prompt("That passkey is already in use! Please enter a different one:");
+                                if (newPasskey && newPasskey.trim() !== "") {
+                                    currentPasskey = newPasskey.trim().toUpperCase();
+                                }
+                            } else {
+                                alert(createData.error || "Failed to create vault");
+                            }
+                            btn.textContent = 'Save Vault';
+                            btn.disabled = false;
+                            return;
+                        }
+                        
+                        currentVaultId = createData.vaultId;
+                        onVaultCreated(createData.passkey, currentVaultId, createData.collab_key);
+                    } else {
+                        // UPDATE EXISTING VAULT METADATA
+                        const payload = {
+                            title: nameVal,
+                            theme: selectedTheme,
+                            user_id: currentUserId,
+                            unlock_date: selectedUnlockDate
+                        };
+                        const updateRes = await fetch(`/api/vaults/${currentPasskey}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (!updateRes.ok) {
+                            console.error("Failed to update vault metadata");
+                        }
+                    }
+
+                    // ADD NEW CONTENTS
+                    if (VaultState.wish && VaultState.wish !== originalWish) {
+                        await fetch(`/api/vaults/${currentVaultId}/content`, {
+                            method: 'POST', headers: {'Content-Type':'application/json'},
+                            body: JSON.stringify({ user_id: currentUserId, type: 'wish', data: { message: VaultState.wish } })
+                        });
+                        originalWish = VaultState.wish;
+                    }
+                    for (let mem of VaultState.memories) {
+                        if (!mem.is_synced) {
+                            await fetch(`/api/vaults/${currentVaultId}/content`, {
+                                method: 'POST', headers: {'Content-Type':'application/json'},
+                                body: JSON.stringify({ user_id: currentUserId, type: 'memory', data: { type: mem.type, title: mem.caption, file_url: mem.file_url || mem.url } })
+                            });
+                            mem.is_synced = true;
+                        }
+                    }
+                    for (let letter of VaultState.letters) {
+                        if (!letter.is_synced) {
+                            await fetch(`/api/vaults/${currentVaultId}/content`, {
+                                method: 'POST', headers: {'Content-Type':'application/json'},
+                                body: JSON.stringify({ user_id: currentUserId, type: 'letter', data: { title: letter.title, content: letter.body } })
+                            });
+                            letter.is_synced = true;
+                        }
+                    }
+                    for (let track of VaultState.soundtrack) {
+                        if (!track.is_synced) {
+                            await fetch(`/api/vaults/${currentVaultId}/content`, {
+                                method: 'POST', headers: {'Content-Type':'application/json'},
+                                body: JSON.stringify({ user_id: currentUserId, type: 'soundtrack', data: { title: track.name, file_url: track.file_url || track.url, duration: track.duration } })
+                            });
+                            track.is_synced = true;
+                        }
+                    }
+                    
+                    vaultName = nameVal;
+                    // Redirect to the dashboard where user can preview vault and view passkey
+                    showToast('Vault contents updated successfully! ✨');
+                    transitionToCustomized({ theme: selectedTheme, emoji: selectedEmoji, name: vaultName });
+                    showView('affinityBuilder');
+                } catch (e) {
+                    console.error("Save error:", e);
+                    alert("Failed to save vault.");
+                } finally {
+                    btn.textContent = 'Save Vault';
+                    btn.disabled = false;
+                }
+            });
+        }
+
+        // ══════════════════════════════════════════════════════════════════════
+        // VAULT STATE — single source of truth for all customized content
+        // ══════════════════════════════════════════════════════════════════════
+        const VaultState = {
+            wish:      '',        // string
+            memories:  [],        // [{ type:'image'|'video', url, caption, file }]
+            letters:   [],        // [{ id, title, body }]
+            soundtrack: [],       // [{ id, name, url, size, duration, file }]
+        };
+
+        function _letterCount() {
+            const s = document.getElementById('lettersCountStatus');
+            const b = document.getElementById('lettersCountBadge');
+            const n = VaultState.letters.length;
+            if (s) s.textContent = n + (n === 1 ? ' Note' : ' Notes');
+            if (b) b.textContent = n + (n === 1 ? ' letter' : ' letters');
+        }
+        function _memoriesCount() {
+            const s = document.getElementById('memoriesCountStatus');
+            if (s) s.textContent = VaultState.memories.length + ' Added';
+        }
+        function _songCount() {
+            const s = document.getElementById('songStatus');
+            if (s) s.textContent = VaultState.soundtrack.length + ' Song' + (VaultState.soundtrack.length !== 1 ? 's' : '');
+        }
+
+        // ── Letters Multi-Manager ─────────────────────────────────────────────
+        let _editingLetterIdx = -1;
+
+        function renderLettersList() {
+            const list = document.getElementById('lettersList');
+            if (!list) return;
+            list.innerHTML = '';
+            VaultState.letters.forEach((letter, i) => {
+                const row = document.createElement('div');
+                row.className = 'dvp-letter-item';
+                row.innerHTML = `
+                    <i class="ph-fill ph-scroll dvp-letter-item-icon"></i>
+                    <div class="dvp-letter-item-preview">${letter.title || ('Letter ' + (i + 1))} — ${letter.body.substring(0, 50) || '(empty)'}</div>
+                    <button class="dvp-letter-item-del" data-idx="${i}" title="Delete"><i class="ph ph-trash"></i></button>
+                `;
+                row.addEventListener('click', (e) => {
+                    if (e.target.closest('.dvp-letter-item-del')) return;
+                    openLetterCompose(i);
+                });
+                row.querySelector('.dvp-letter-item-del').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    VaultState.letters.splice(i, 1);
+                    renderLettersList();
+                    _letterCount();
+                    showToast('Letter deleted');
+                });
+                list.appendChild(row);
+            });
+            _letterCount();
+        }
+
+        function openLetterCompose(idx) {
+            _editingLetterIdx = idx;
+            const listPanel    = document.getElementById('lettersListPanel');
+            const composePanel = document.getElementById('lettersComposePanel');
+            const titleInput   = document.getElementById('letterTitleInput');
+            const bodyInput    = document.getElementById('lettersInput');
+            const compTitle    = document.getElementById('lettersComposeTitle');
+            if (!listPanel || !composePanel) return;
+
+            if (idx === -1) {
+                // new letter
+                titleInput.value = '';
+                bodyInput.value  = '';
+                if (compTitle) compTitle.textContent = 'New Letter';
+            } else {
+                const l = VaultState.letters[idx];
+                titleInput.value = l.title || '';
+                bodyInput.value  = l.body  || '';
+                if (compTitle) compTitle.textContent = l.title || 'Letter ' + (idx + 1);
+            }
+            listPanel.style.display    = 'none';
+            composePanel.style.display = 'block';
+            setTimeout(() => bodyInput?.focus(), 300);
+        }
+
+        document.getElementById('addLettersBtn')?.addEventListener('click', () => {
+            showView('letters');
+            document.getElementById('lettersListPanel').style.display    = 'block';
+            document.getElementById('lettersComposePanel').style.display = 'none';
+            renderLettersList();
+        });
+
+        document.getElementById('addNewLetterBtn')?.addEventListener('click', () => openLetterCompose(-1));
+
+        document.getElementById('lettersComposeBackBtn')?.addEventListener('click', () => {
+            document.getElementById('lettersListPanel').style.display    = 'block';
+            document.getElementById('lettersComposePanel').style.display = 'none';
+        });
+
+        document.getElementById('lettersBackBtn')?.addEventListener('click', () => showView('customize'));
+
+        document.getElementById('saveLettersBtn')?.addEventListener('click', () => {
+            const title = (document.getElementById('letterTitleInput')?.value || '').trim();
+            const body  = (document.getElementById('lettersInput')?.value  || '').trim();
+            if (!body) { showToast('Write something first ✏️'); return; }
+            if (_editingLetterIdx === -1) {
+                VaultState.letters.push({ id: Date.now(), title, body });
+            } else {
+                VaultState.letters[_editingLetterIdx] = { ...VaultState.letters[_editingLetterIdx], title, body };
+            }
+            renderLettersList();
+            _letterCount();
+            document.getElementById('lettersListPanel').style.display    = 'block';
+            document.getElementById('lettersComposePanel').style.display = 'none';
+            showToast('Letter saved ✨');
+        });
+
+        // Auto-save simulation for letters
+        document.getElementById('lettersInput')?.addEventListener('input', (() => {
+            let t;
+            return () => {
+                const as = document.getElementById('lettersAutoSave');
+                if (!as) return;
+                as.classList.add('saving');
+                as.innerHTML = '<i class="ph ph-spinner-gap"></i> Saving...';
+                clearTimeout(t);
+                t = setTimeout(() => {
+                    as.classList.remove('saving');
+                    as.innerHTML = '<i class="ph-fill ph-check-circle"></i> Saved';
+                }, 900);
+            };
+        })());
+
+        // ── Memories: wire upload to VaultState ──────────────────────────────
+        // Patch existing media upload to also push into VaultState.memories
+        (function patchMemoriesUpload() {
+            const orig = window._origMediaHandler;
+            const input = document.getElementById('mediaFileInput');
+            if (!input) return;
+            // Remove the original listener by replacing the element clone trick won't work
+            // — instead we intercept via the existing change listener already bound, and
+            // additionally add our own to keep VaultState in sync.
+            input.addEventListener('change', (e) => {
+                const files = e.target.files;
+                if (!files || files.length === 0) return;
+                Array.from(files).forEach(file => {
+                    const url  = URL.createObjectURL(file);
+                    const type = file.type.startsWith('image/') ? 'image' : 'video';
+                    VaultState.memories.push({ type, url, caption: '', file });
+                    _memoriesCount();
+                });
+            });
+            // Also patch caption changes — we capture captions on preview render
+        })();
+
+        // ── Soundtrack Playlist Manager ───────────────────────────────────────
+        (function () {
+            const modal      = document.getElementById('soundtrackModal');
+            const closeBtn   = document.getElementById('soundtrackModalClose');
+            const fileInput  = document.getElementById('soundtrackFileInput');
+            const addMoreBtn = document.getElementById('soundtrackAddMoreBtn');
+            const saveBtn    = document.getElementById('soundtrackSaveBtn');
+            const plMgr      = document.getElementById('soundtrackPlaylistManager');
+            const audio      = document.getElementById('soundtrackModalAudio');
+            const hubCard    = document.getElementById('addSongBtn');
+
+            function formatBytes(b) {
+                return b < 1048576 ? (b/1024).toFixed(0)+' KB' : (b/1048576).toFixed(1)+' MB';
+            }
+
+            function renderPlaylist() {
+                if (!plMgr) return;
+                plMgr.innerHTML = '';
+                if (VaultState.soundtrack.length === 0) {
+                    plMgr.innerHTML = '<p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;padding:1.5rem 0;">No songs yet. Add an MP3 below.</p>';
+                    return;
+                }
+                VaultState.soundtrack.forEach((track, i) => {
+                    const row = document.createElement('div');
+                    row.className = 'dvp-pl-track-row';
+                    row.draggable = true;
+                    row.dataset.idx = i;
+                    row.innerHTML = `
+                        <i class="ph ph-dots-six-vertical dvp-pl-drag-handle"></i>
+                        <input type="text" class="dvp-pl-track-name-input" value="${track.name}" title="Click to rename">
+                        <span class="dvp-pl-track-size">${formatBytes(track.size)}</span>
+                        <button class="dvp-pl-play-btn" title="Preview"><i class="ph ph-play"></i></button>
+                        <button class="dvp-pl-del-btn" title="Delete"><i class="ph ph-trash"></i></button>
+                    `;
+                    // Rename
+                    row.querySelector('.dvp-pl-track-name-input').addEventListener('change', (e) => {
+                        VaultState.soundtrack[i].name = e.target.value.trim() || track.name;
+                    });
+                    // Play preview in modal
+                    const playBtn = row.querySelector('.dvp-pl-play-btn');
+                    playBtn.addEventListener('click', () => {
+                        if (audio.src === track.url && !audio.paused) {
+                            audio.pause();
+                            playBtn.innerHTML = '<i class="ph ph-play"></i>';
+                        } else {
+                            audio.src = track.url;
+                            audio.play();
+                            playBtn.innerHTML = '<i class="ph ph-pause"></i>';
+                            // Reset other play buttons
+                            plMgr.querySelectorAll('.dvp-pl-play-btn').forEach((b, bi) => {
+                                if (bi !== i) b.innerHTML = '<i class="ph ph-play"></i>';
+                            });
+                        }
+                    });
+                    // Delete
+                    row.querySelector('.dvp-pl-del-btn').addEventListener('click', () => {
+                        URL.revokeObjectURL(VaultState.soundtrack[i].url);
+                        VaultState.soundtrack.splice(i, 1);
+                        _songCount();
+                        renderPlaylist();
+                        showToast('Song removed');
+                    });
+                    // Drag-and-drop reorder
+                    row.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text/plain', i); row.style.opacity = '0.4'; });
+                    row.addEventListener('dragend', () => { row.style.opacity = '1'; });
+                    row.addEventListener('dragover', (e) => { e.preventDefault(); row.style.background = 'rgba(107,33,168,0.2)'; });
+                    row.addEventListener('dragleave', () => { row.style.background = ''; });
+                    row.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        row.style.background = '';
+                        const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+                        const toIdx   = i;
+                        if (fromIdx === toIdx) return;
+                        const [moved] = VaultState.soundtrack.splice(fromIdx, 1);
+                        VaultState.soundtrack.splice(toIdx, 0, moved);
+                        renderPlaylist();
+                    });
+                    plMgr.appendChild(row);
+                });
+            }
+
+            function addFiles(files) {
+                Array.from(files).forEach(file => {
+                    if (file.type !== 'audio/mpeg' && !file.name.toLowerCase().endsWith('.mp3')) {
+                        showToast('Only MP3 files are supported ⚠️'); return;
+                    }
+                    if (file.size > 20 * 1048576) { showToast('File too large — max 20 MB ⚠️'); return; }
+                    const url = URL.createObjectURL(file);
+                    // Get duration
+                    const tmp = new Audio(url);
+                    tmp.addEventListener('loadedmetadata', () => {
+                        VaultState.soundtrack.push({ id: Date.now() + Math.random(), name: file.name.replace(/\.mp3$/i,''), url, size: file.size, duration: tmp.duration, file });
+                        _songCount();
+                        renderPlaylist();
+                    });
+                });
+            }
+
+            function openModal() { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; renderPlaylist(); }
+            function closeModal() { modal.style.display = 'none'; document.body.style.overflow = ''; audio.pause(); }
+
+            if (hubCard) hubCard.addEventListener('click', openModal);
+            closeBtn?.addEventListener('click', closeModal);
+            modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+            addMoreBtn?.addEventListener('click', () => fileInput.click());
+            fileInput?.addEventListener('change', () => { addFiles(fileInput.files); fileInput.value = ''; });
+            saveBtn?.addEventListener('click', () => { closeModal(); _songCount(); showToast('Playlist saved 🎵'); });
+        })();
+
+        // Auto-save simulation
+        const bdayMsgInput = document.getElementById('bdayMsgInput');
+        const msgAutoSave = document.getElementById('msgAutoSave');
+        let saveTimeout;
+        if (bdayMsgInput && msgAutoSave) {
+            bdayMsgInput.addEventListener('input', () => {
+                msgAutoSave.classList.add('saving');
+                msgAutoSave.innerHTML = '<i class="ph ph-spinner-gap"></i> Saving...';
+                clearTimeout(saveTimeout);
+                saveTimeout = setTimeout(() => {
+                    msgAutoSave.classList.remove('saving');
+                    msgAutoSave.innerHTML = '<i class="ph-fill ph-check-circle"></i> Saved';
+                    // Sync wish into VaultState
+                    VaultState.wish = bdayMsgInput.value;
+                }, 1000);
+            });
+        }
+
+        // Also save wish when Save Message button is clicked
+        document.getElementById('saveBdayMsgBtn')?.addEventListener('click', function() {
+            const input = document.getElementById('bdayMsgInput');
+            if (input) VaultState.wish = input.value;
+        }, true); // capture phase so it fires before showView
+
+        document.getElementById('goPreview').addEventListener('click', () => {
+            openDVP('full');
+        });
+
+
+        // ══════════════════════════════════════════════════════════════════════
+        // DYNAMIC VAULT PREVIEW ENGINE
+        // ══════════════════════════════════════════════════════════════════════
+        const DVP_CAT_IMAGES = {
+            'birthday': './vault-birthday.png', 'anniversary': './vault-anniversary.png',
+            'friendship': './vault-friendship.png', 'family': './vault-family.png',
+            'surprise': './vault-surprise.png', 'open-when': './vault-openwhen.png', 'custom': './vault-custom.png'
+        };
+        const DVP_SECTION_LABELS = { wish:'Wish', memories:'Memories', letters:'Letters', soundtrack:'Soundtrack', full:'Full Preview' };
+
+        let _dvpAutoplayTimer = null;
+        let _dvpAudioEl       = null;
+
+        function _dvpSpawnParticles() {
+            const overlay = document.getElementById('dvpOverlay');
+            if (!overlay) return;
+            overlay.querySelectorAll('.dvp-particle').forEach(p => p.remove());
+            for (let i = 0; i < 20; i++) {
+                const p = document.createElement('div');
+                p.className = 'dvp-particle';
+                const size = 2 + Math.random() * 5;
+                p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${100 + Math.random()*20}%;animation-duration:${8+Math.random()*10}s;animation-delay:${Math.random()*8}s;opacity:${0.2+Math.random()*0.5};background:${Math.random()>0.5?'rgba(192,38,211,0.5)':'rgba(99,102,241,0.5)'};`;
+                overlay.appendChild(p);
+            }
+        }
+
+        function _dvpSetVault() {
+            const img = document.getElementById('dvpVaultImg');
+            const lbl = document.getElementById('dvpVaultLabel');
+            const sub = document.getElementById('dvpVaultSub');
+            const src = DVP_CAT_IMAGES[currentCategory] || './vault-birthday.png';
+            if (img) { img.src = src; }
+            const name = appliedCustomization?.name || 'Your Special Vault';
+            if (lbl) lbl.textContent = name;
+            const catLabel = CATEGORY_CONFIG[currentCategory]?.label || 'Birthday';
+            if (sub) sub.textContent = catLabel + ' Vault · Protected by Affinity';
+        }
+
+        function openDVP(section) {
+            clearTimeout(_dvpAutoplayTimer);
+            if (_dvpAudioEl) { _dvpAudioEl.pause(); _dvpAudioEl = null; }
+
+            const overlay = document.getElementById('dvpOverlay');
+            const badge   = document.getElementById('dvpSectionBadge');
+            const content = document.getElementById('dvpContent');
+            if (!overlay || !content) return;
+
+            _dvpSetVault();
+            if (badge) badge.textContent = DVP_SECTION_LABELS[section] || section;
+            content.innerHTML = '';
+
+            if      (section === 'wish')      _dvpRenderWish(content);
+            else if (section === 'memories')  _dvpRenderMemories(content);
+            else if (section === 'letters')   _dvpRenderLetters(content);
+            else if (section === 'soundtrack')_dvpRenderSoundtrack(content);
+            else if (section === 'full')      _dvpRenderFull(content);
+
+            if (section === 'full' && VaultState.soundtrack.length > 0) {
+                const track = VaultState.soundtrack[0];
+                const url = track.file_url || track.url;
+                if (url) {
+                    _dvpAudioEl = new Audio(url);
+                    _dvpAudioEl.loop = true;
+                    _dvpAudioEl.play().catch(e => console.log('Autoplay blocked:', e));
+                }
+            }
+
+            overlay.classList.add('dvp-open');
+            document.body.style.overflow = 'hidden';
+            _dvpSpawnParticles();
+        }
+
+        function closeDVP() {
+            clearTimeout(_dvpAutoplayTimer);
+            if (_dvpAudioEl) { _dvpAudioEl.pause(); _dvpAudioEl = null; }
+            const overlay = document.getElementById('dvpOverlay');
+            if (overlay) overlay.classList.remove('dvp-open');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('dvpCloseBtn')?.addEventListener('click', closeDVP);
+        });
+
+        // Wire preview buttons on hub cards
+        document.getElementById('previewWishBtn')?.addEventListener('click',      () => openDVP('wish'));
+        document.getElementById('previewMemoriesBtn')?.addEventListener('click',  () => openDVP('memories'));
+        document.getElementById('previewLettersBtn')?.addEventListener('click',   () => openDVP('letters'));
+        document.getElementById('previewSoundtrackBtn')?.addEventListener('click',() => openDVP('soundtrack'));
+
+        // ── Wish Panel ────────────────────────────────────────────────────────
+        function _dvpRenderWish(container) {
+            const wish = VaultState.wish || document.getElementById('bdayMsgInput')?.value || '';
+            if (!wish.trim()) {
+                container.innerHTML = `<div class="dvp-empty"><i class="ph ph-envelope-simple"></i><p>No wish written yet — go to the Wish section to add one.</p></div>`;
+                return;
+            }
+            const card = document.createElement('div');
+            card.className = 'dvp-wish-card';
+            card.innerHTML = `
+                <div class="dvp-wish-header">
+                    <i class="ph-fill ph-star"></i>
+                    <span>Wish · Affinity Vault</span>
+                </div>
+                <div class="dvp-wish-body">${wish.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+            `;
+            container.appendChild(card);
+        }
+
+        // ── Memories Slideshow Panel ──────────────────────────────────────────
+        function _dvpRenderMemories(container) {
+            // Capture live captions from the DOM gallery
+            const galleryItems = document.querySelectorAll('.memory-gallery-item');
+            if (galleryItems.length > 0) {
+                // Sync captions from DOM back into VaultState
+                galleryItems.forEach((item, i) => {
+                    const captionInput = item.querySelector('.memory-caption-input');
+                    if (VaultState.memories[i]) {
+                        VaultState.memories[i].caption = captionInput?.value || '';
+                    }
+                });
+            }
+            const items = VaultState.memories;
+            if (items.length === 0) {
+                container.innerHTML = `<div class="dvp-empty"><i class="ph ph-images"></i><p>No memories added yet — upload photos or videos in the Memories section.</p></div>`;
+                return;
+            }
+            let idx = 0;
+            let autoplay = false;
+
+            const slideshow = document.createElement('div');
+            slideshow.className = 'dvp-slideshow';
+            slideshow.innerHTML = `
+                <div class="dvp-slide-viewport" id="dvpSlideVP">
+                    <div class="dvp-slide-caption" id="dvpSlideCaption"></div>
+                </div>
+                <div class="dvp-slide-nav">
+                    <button class="dvp-nav-btn" id="dvpPrev"><i class="ph ph-caret-left"></i></button>
+                    <span class="dvp-slide-counter" id="dvpCounter">1 / ${items.length}</span>
+                    <button class="dvp-nav-btn" id="dvpNext"><i class="ph ph-caret-right"></i></button>
+                    <button class="dvp-autoplay-btn" id="dvpAutoplay"><i class="ph ph-play"></i> Auto</button>
+                </div>
+                <div class="dvp-slide-dots" id="dvpDots"></div>
+            `;
+            container.appendChild(slideshow);
+
+            const vp      = slideshow.querySelector('#dvpSlideVP');
+            const counter = slideshow.querySelector('#dvpCounter');
+            const caption = slideshow.querySelector('#dvpSlideCaption');
+            const dotsEl  = slideshow.querySelector('#dvpDots');
+            const prevBtn = slideshow.querySelector('#dvpPrev');
+            const nextBtn = slideshow.querySelector('#dvpNext');
+            const apBtn   = slideshow.querySelector('#dvpAutoplay');
+
+            // Build dots
+            items.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.className = 'dvp-dot' + (i === 0 ? ' active' : '');
+                dot.addEventListener('click', () => goSlide(i));
+                dotsEl.appendChild(dot);
+            });
+
+            function goSlide(newIdx) {
+                idx = (newIdx + items.length) % items.length;
+                // Clear old media
+                vp.querySelectorAll('.dvp-slide-media').forEach(m => { m.style.opacity='0'; setTimeout(()=>m.remove(),500); });
+                const item = items[idx];
+                let el;
+                if (item.type === 'image') {
+                    el = document.createElement('img');
+                } else {
+                    el = document.createElement('video');
+                    el.autoplay = true; el.muted = true; el.loop = true;
+                    el.playsInline = true;
+                }
+                el.src = item.url;
+                el.className = 'dvp-slide-media';
+                el.style.opacity = '0';
+                el.style.transition = 'opacity 0.5s';
+                vp.insertBefore(el, caption);
+                requestAnimationFrame(() => { el.style.opacity = '1'; });
+                const author = item.user_id ? VaultState.participants[item.user_id] || 'Unknown' : '';
+                caption.textContent = (item.caption || '') + (author ? (item.caption ? '  — ' : '') + 'Added by ' + author : '');
+                caption.style.display = (item.caption || author) ? 'block' : 'none';
+                counter.textContent = (idx + 1) + ' / ' + items.length;
+                prevBtn.disabled = false;
+                nextBtn.disabled = false;
+                dotsEl.querySelectorAll('.dvp-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+            }
+
+            prevBtn.addEventListener('click', () => { clearTimeout(_dvpAutoplayTimer); goSlide(idx - 1); });
+            nextBtn.addEventListener('click', () => { clearTimeout(_dvpAutoplayTimer); goSlide(idx + 1); });
+
+            apBtn.addEventListener('click', () => {
+                autoplay = !autoplay;
+                apBtn.classList.toggle('active', autoplay);
+                apBtn.innerHTML = autoplay ? '<i class="ph ph-pause"></i> Auto' : '<i class="ph ph-play"></i> Auto';
+                if (autoplay) {
+                    (function tick() { _dvpAutoplayTimer = setTimeout(() => { goSlide(idx + 1); if (autoplay) tick(); }, 4000); })();
+                } else { clearTimeout(_dvpAutoplayTimer); }
+            });
+
+            goSlide(0);
+        }
+
+        // ── Letters Slideshow Panel ───────────────────────────────────────────
+        function _dvpRenderLetters(container) {
+            const letters = VaultState.letters;
+            if (letters.length === 0) {
+                container.innerHTML = `<div class="dvp-empty"><i class="ph ph-scroll"></i><p>No letters written yet — go to Personal Letters to write one.</p></div>`;
+                return;
+            }
+            let idx = 0;
+
+            function renderCard() {
+                container.innerHTML = '';
+                const letter = letters[idx];
+                const card = document.createElement('div');
+                card.className = 'dvp-letter-card';
+                card.innerHTML = `
+                    <div class="dvp-letter-eyebrow">
+                        <i class="ph-fill ph-scroll"></i>
+                        <span>${letter.title || ('Letter ' + (idx + 1))} &nbsp;·&nbsp; ${idx + 1} of ${letters.length} ${letter.user_id ? '&nbsp;·&nbsp; From ' + (VaultState.participants[letter.user_id] || 'Unknown') : ''}</span>
+                    </div>
+                    <div class="dvp-letter-body">${(letter.body || '').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+                    <div class="dvp-letter-nav">
+                        <button class="dvp-nav-btn" id="dvpLPrev" ${idx === 0 ? 'disabled' : ''}><i class="ph ph-caret-left"></i></button>
+                        <span style="font-size:0.85rem;color:var(--text-secondary);">${idx+1} / ${letters.length}</span>
+                        <button class="dvp-nav-btn" id="dvpLNext" ${idx === letters.length-1 ? 'disabled' : ''}><i class="ph ph-caret-right"></i></button>
+                    </div>
+                `;
+                card.querySelector('#dvpLPrev')?.addEventListener('click', () => { if (idx > 0) { idx--; renderCard(); } });
+                card.querySelector('#dvpLNext')?.addEventListener('click', () => { if (idx < letters.length-1) { idx++; renderCard(); } });
+                container.appendChild(card);
+            }
+            renderCard();
+        }
+
+        // ── Soundtrack Playlist Panel ─────────────────────────────────────────
+        function _dvpRenderSoundtrack(container) {
+            const tracks = VaultState.soundtrack;
+            if (tracks.length === 0) {
+                container.innerHTML = `<div class="dvp-empty"><i class="ph ph-music-notes"></i><p>No songs added yet — open the Soundtrack section to upload MP3 files.</p></div>`;
+                return;
+            }
+            let currentIdx = 0;
+            let isPlaying  = false;
+            const audio    = new Audio();
+            _dvpAudioEl    = audio;
+
+            function fmtTime(s) {
+                if (!s || isNaN(s)) return '0:00';
+                const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+                return m + ':' + String(sec).padStart(2, '0');
+            }
+            function formatBytes(b) { return b < 1048576 ? (b/1024).toFixed(0)+' KB' : (b/1048576).toFixed(1)+' MB'; }
+
+            const playlist = document.createElement('div');
+            playlist.className = 'dvp-playlist';
+            playlist.innerHTML = `
+                <div class="dvp-now-playing">
+                    <div class="dvp-np-title" id="dvpNpTitle">${tracks[0].name}</div>
+                    <div class="dvp-np-sub" id="dvpNpSub">Track 1 of ${tracks.length}</div>
+                    <div class="dvp-seek-row">
+                        <span class="dvp-time" id="dvpCurTime">0:00</span>
+                        <input type="range" class="dvp-seek-bar" id="dvpSeekBar" value="0" min="0" max="100" step="0.1">
+                        <span class="dvp-time" id="dvpDurTime">0:00</span>
+                    </div>
+                    <div class="dvp-controls">
+                        <button class="dvp-ctrl-btn" id="dvpCtrlPrev" title="Previous"><i class="ph ph-skip-back"></i></button>
+                        <button class="dvp-ctrl-btn dvp-ctrl-play" id="dvpCtrlPlay"><i class="ph ph-play"></i></button>
+                        <button class="dvp-ctrl-btn" id="dvpCtrlNext" title="Next"><i class="ph ph-skip-forward"></i></button>
+                    </div>
+                    <div class="dvp-vol-row">
+                        <i class="ph ph-speaker-simple-low dvp-vol-icon"></i>
+                        <input type="range" class="dvp-vol-bar" id="dvpVolBar" value="100" min="0" max="100">
+                    </div>
+                </div>
+                <div class="dvp-track-list" id="dvpTrackList"></div>
+            `;
+            container.appendChild(playlist);
+
+            const npTitle   = playlist.querySelector('#dvpNpTitle');
+            const npSub     = playlist.querySelector('#dvpNpSub');
+            const curTime   = playlist.querySelector('#dvpCurTime');
+            const durTime   = playlist.querySelector('#dvpDurTime');
+            const seekBar   = playlist.querySelector('#dvpSeekBar');
+            const playBtn   = playlist.querySelector('#dvpCtrlPlay');
+            const prevBtn   = playlist.querySelector('#dvpCtrlPrev');
+            const nextBtn   = playlist.querySelector('#dvpCtrlNext');
+            const volBar    = playlist.querySelector('#dvpVolBar');
+            const trackList = playlist.querySelector('#dvpTrackList');
+
+            function loadTrack(i, autoplay = false) {
+                currentIdx = i;
+                audio.src  = tracks[i].url;
+                npTitle.textContent = tracks[i].name;
+                npSub.textContent   = 'Track ' + (i + 1) + ' of ' + tracks.length;
+                seekBar.value = 0;
+                curTime.textContent = '0:00';
+                durTime.textContent = tracks[i].duration ? fmtTime(tracks[i].duration) : '0:00';
+                trackList.querySelectorAll('.dvp-track-row').forEach((r, ri) => r.classList.toggle('dvp-track-active', ri === i));
+                if (autoplay) { audio.play(); isPlaying = true; playBtn.innerHTML = '<i class="ph ph-pause"></i>'; }
+                else { isPlaying = false; playBtn.innerHTML = '<i class="ph ph-play"></i>'; }
+            }
+
+            function buildTrackList() {
+                trackList.innerHTML = '';
+                tracks.forEach((t, i) => {
+                    const row = document.createElement('div');
+                    row.className = 'dvp-track-row' + (i === currentIdx ? ' dvp-track-active' : '');
+                    row.innerHTML = `
+                        <span class="dvp-track-num">${i + 1}</span>
+                        <div class="dvp-track-info">
+                            <div class="dvp-track-name">${t.name}</div>
+                            <div class="dvp-track-size" style="opacity: 0.7;">${t.user_id ? 'Added by ' + (VaultState.participants[t.user_id] || 'Unknown') : ''}</div>
+                        </div>
+                        <span class="dvp-track-dur">${t.duration ? fmtTime(t.duration) : '--'}</span>
+                    `;
+                    row.addEventListener('click', () => loadTrack(i, true));
+                    trackList.appendChild(row);
+                });
+            }
+
+            audio.addEventListener('timeupdate', () => {
+                if (!audio.duration) return;
+                seekBar.value = (audio.currentTime / audio.duration) * 100;
+                curTime.textContent = fmtTime(audio.currentTime);
+            });
+            audio.addEventListener('loadedmetadata', () => { durTime.textContent = fmtTime(audio.duration); });
+            audio.addEventListener('ended', () => {
+                if (currentIdx < tracks.length - 1) loadTrack(currentIdx + 1, true);
+                else { isPlaying = false; playBtn.innerHTML = '<i class="ph ph-play"></i>'; }
+            });
+
+            seekBar.addEventListener('input', () => {
+                if (audio.duration) audio.currentTime = (seekBar.value / 100) * audio.duration;
+            });
+            volBar.addEventListener('input', () => { audio.volume = volBar.value / 100; });
+
+            playBtn.addEventListener('click', () => {
+                if (isPlaying) { audio.pause(); isPlaying = false; playBtn.innerHTML = '<i class="ph ph-play"></i>'; }
+                else           { audio.play();  isPlaying = true;  playBtn.innerHTML = '<i class="ph ph-pause"></i>'; }
+            });
+            prevBtn.addEventListener('click', () => { if (currentIdx > 0) loadTrack(currentIdx - 1, isPlaying); });
+            nextBtn.addEventListener('click', () => { if (currentIdx < tracks.length - 1) loadTrack(currentIdx + 1, isPlaying); });
+
+            buildTrackList();
+            loadTrack(0);
+        }
+
+        // ── Full Vault Preview ────────────────────────────────────────────────
+        function _dvpRenderFull(container) {
+            // Show all sections that have content in sequence
+            const sections = [];
+            if ((VaultState.wish || document.getElementById('bdayMsgInput')?.value || '').trim()) sections.push('wish');
+            if (VaultState.memories.length > 0) sections.push('memories');
+            if (VaultState.letters.length > 0)  sections.push('letters');
+            // Soundtrack removed from UI, plays in background
+
+            if (sections.length === 0) {
+                container.innerHTML = `
+                    <div class="dvp-empty"><i class="ph ph-gem"></i><p>Your vault is empty. Add a Wish, Memories, Letters, or Soundtrack to preview.</p></div>
+                    <div class="dvp-invite-card" style="margin-top:2rem;padding:1.5rem;background:rgba(255,255,255,0.05);border-radius:12px;text-align:center;">
+                        <i class="ph ph-users-three" style="font-size:2rem;color:var(--accent);"></i>
+                        <h3>Invite Friends</h3>
+                        <p style="font-size:0.9rem;opacity:0.8;">Collaborate on this vault by sharing the access key with others.</p>
+                        <div style="margin-top:1rem;background:rgba(0,0,0,0.2);padding:0.5rem;border-radius:6px;font-family:monospace;">${currentCollabKey || 'Generating...'}</div>
+                    </div>
+                `;
+                return;
+            }
+            // Render first section
+            let sectionIdx = 0;
+            const badge = document.getElementById('dvpSectionBadge');
+
+            const nav = document.createElement('div');
+            nav.style.cssText = 'display:flex;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap;justify-content:center;';
+            sections.forEach((s, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'c-hub-preview-btn' + (i === 0 ? '' : '');
+                btn.style.cssText = 'background:rgba(107,33,168,0.15);border:1px solid rgba(168,85,247,0.25);';
+                btn.innerHTML = DVP_SECTION_LABELS[s];
+                btn.addEventListener('click', () => {
+                    sectionIdx = i;
+                    subContainer.innerHTML = '';
+                    if (badge) badge.textContent = DVP_SECTION_LABELS[s];
+                    if      (s === 'wish')       _dvpRenderWish(subContainer);
+                    else if (s === 'memories')   _dvpRenderMemories(subContainer);
+                    else if (s === 'letters')    _dvpRenderLetters(subContainer);
+                    else if (s === 'soundtrack') _dvpRenderSoundtrack(subContainer);
+                });
+                nav.appendChild(btn);
+            });
+            container.appendChild(nav);
+
+            const subContainer = document.createElement('div');
+            subContainer.style.cssText = 'width:100%;';
+            container.appendChild(subContainer);
+
+            // Render first section
+            const firstSection = sections[0];
+            if (badge) badge.textContent = DVP_SECTION_LABELS[firstSection];
+            if      (firstSection === 'wish')       _dvpRenderWish(subContainer);
+            else if (firstSection === 'memories')   _dvpRenderMemories(subContainer);
+            else if (firstSection === 'letters')    _dvpRenderLetters(subContainer);
+            else if (firstSection === 'soundtrack') _dvpRenderSoundtrack(subContainer);
+        }
+        // ── End DVP Engine ────────────────────────────────────────────────────
+
+        document.getElementById('goPasskey').addEventListener('click', () => {
+            const pvd     = document.getElementById('passkeyValueDisplay');
+            const eyeIcon = document.getElementById('eyeIcon');
+            if (pvd)     { pvd.textContent = '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022'; passkeyVisible = false; }
+            if (eyeIcon) { eyeIcon.classList.replace('ph-eye-slash', 'ph-eye'); }
+            showView('passkey');
+        });
+
+        document.getElementById('goCollab').addEventListener('click', () => {
+            if (!currentCollabKey) return;
+            navigator.clipboard.writeText(currentCollabKey)
+                .then(() => showToast('Collab key copied to clipboard!'))
+                .catch(err => console.error('Failed to copy', err));
+        });
+
+        // ── Back buttons ──────────────────────────────────────────────────
+        document.querySelectorAll('[data-back]').forEach(btn => {
+            btn.addEventListener('click', () => goBack());
+        });
+
+        // ── Customize view logic ──────────────────────────────────────────
+        let selectedTheme = 'aurora';
+        let selectedEmoji = '🎂';
+        let vaultName     = 'Your Special Vault';
+        let selectedUnlockDate = null;
+
+        document.querySelectorAll('.theme-swatch').forEach(swatch => {
+            swatch.addEventListener('click', () => {
+                document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
+                swatch.classList.add('active');
+                selectedTheme = swatch.dataset.theme;
+            });
+        });
+
+        const saveVaultUnlockDateBtn = document.getElementById('saveVaultUnlockDate');
+        if (saveVaultUnlockDateBtn) {
+            saveVaultUnlockDateBtn.addEventListener('click', () => {
+                const val = document.getElementById('vaultUnlockDateInput').value;
+                selectedUnlockDate = val ? new Date(val).toISOString() : null;
+                showToast('Unlock date saved!');
+            });
+        }
+
+        // ── Render vault preview from applied customization snapshot ──────
+        const THEME_GRADIENTS = {
+            aurora   : 'linear-gradient(135deg,#6b21a8,#c026d3,#4f46e5)',
+            sunset   : 'linear-gradient(135deg,#ea580c,#f59e0b,#ec4899)',
+            ocean    : 'linear-gradient(135deg,#0369a1,#06b6d4,#0d9488)',
+            rose     : 'linear-gradient(135deg,#be185d,#f43f5e,#fda4af)',
+            forest   : 'linear-gradient(135deg,#15803d,#4ade80,#a3e635)',
+            midnight : 'linear-gradient(135deg,#1e1b4b,#312e81,#4338ca)',
+        };
+
+        function renderVaultPreview() {
+            if (!appliedCustomization) return;
+            const { theme, emoji, name } = appliedCustomization;
+            const gradient = THEME_GRADIENTS[theme] || THEME_GRADIENTS.aurora;
+
+            const hero = document.getElementById('vrHero');
+            // Background is set to transparent to keep the floating vault look
+            // if (hero) hero.style.background = gradient;
+            
+            const dvpOverlay = document.getElementById('dvpOverlay');
+            if (dvpOverlay) dvpOverlay.style.background = gradient;
+
+            const viewCountdown = document.getElementById('view-countdown');
+            if (viewCountdown) viewCountdown.style.background = gradient;
+
+            const emojiEl = document.getElementById('vrEmoji');
+            if (emojiEl) emojiEl.textContent = emoji;
+
+            const titleEl = document.getElementById('vrTitle');
+            if (titleEl) titleEl.textContent = name;
+
+            const metaThemeEl = document.getElementById('vrMetaTheme');
+            if (metaThemeEl) metaThemeEl.textContent = capitalize(theme);
+
+            const metaNameEl = document.getElementById('vrMetaName');
+            if (metaNameEl) metaNameEl.textContent = name;
+
+            // Tint the unlock strip accent to match theme
+            const strip = document.getElementById('vrUnlockStrip');
+            if (strip) strip.style.borderColor = 'rgba(255,255,255,0.15)';
+        }
+
+        // Keep legacy syncPreviewMeta as no-op (preview now uses renderVaultPreview)
+        function syncPreviewMeta() {}
+
+        document.querySelectorAll('.emoji-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedEmoji = btn.dataset.emoji;
+            });
+        });
+
+        document.getElementById('saveVaultName').addEventListener('click', () => {
+            const val = document.getElementById('vaultNameInput').value.trim();
+            if (val) { vaultName = val; showToast('Vault name saved!'); }
+        });
+
+        document.getElementById('applyCustomizationBtn').addEventListener('click', () => {
+            const nameVal = document.getElementById('vaultNameInput').value.trim() || vaultName;
+            // Build the customization snapshot
+            const snap = {
+                theme : selectedTheme,
+                emoji : selectedEmoji,
+                name  : nameVal,
+            };
+            vaultName = nameVal;
+            // Transition the vault state to CUSTOMIZED
+            transitionToCustomized(snap);
+            showToast('Customization applied \u2728 Vault is now previewable');
+        });
+
+        // ── Passkey view logic ────────────────────────────────────────────
+        let passkeyVisible = false;
+
+        document.getElementById('togglePasskeyVisibility').addEventListener('click', () => {
+            passkeyVisible = !passkeyVisible;
+            const pvd     = document.getElementById('passkeyValueDisplay');
+            const eyeIcon = document.getElementById('eyeIcon');
+            const real    = pvd.dataset.real || currentPasskey || '(no passkey set yet)';
+            pvd.textContent = passkeyVisible ? real : '••••••••';
+            eyeIcon.classList.toggle('ph-eye',      !passkeyVisible);
+            eyeIcon.classList.toggle('ph-eye-slash', passkeyVisible);
+        });
+
+        document.getElementById('copyPasskeyLargeBtn').addEventListener('click', async () => {
+            const pvd  = document.getElementById('passkeyValueDisplay');
+            const real = pvd.dataset.real || currentPasskey;
+            if (!real) { showToast('No passkey available yet.'); return; }
+            try {
+                await navigator.clipboard.writeText(real);
+                const icon = document.getElementById('copyLargeIcon');
+                const txt  = document.getElementById('copyLargeText');
+                icon.classList.replace('ph-copy', 'ph-check');
+                txt.textContent = 'Copied!';
+                document.getElementById('copyPasskeyLargeBtn').classList.add('copied');
+                setTimeout(() => {
+                    icon.classList.replace('ph-check', 'ph-copy');
+                    txt.textContent = 'Copy to Clipboard';
+                    document.getElementById('copyPasskeyLargeBtn').classList.remove('copied');
+                }, 2000);
+            } catch {
+                showToast('Could not copy — please copy manually.');
+            }
+        });
+
+        // ── Toast helper ──────────────────────────────────────────────────
+        function showToast(msg) {
+            let toast = document.getElementById('affinity-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'affinity-toast';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._t);
+            toast._t = setTimeout(() => toast.classList.remove('show'), 2800);
+        }
+
+        // ── Vault Not Ready modal ─────────────────────────────────────────
+        function showVaultNotReadyModal(actionLabel) {
+            const modal = document.getElementById('vaultNotReadyModal');
+            const lbl   = document.getElementById('vaultNotReadyAction');
+            if (lbl)   lbl.textContent = actionLabel;
+            if (modal) {
+                modal.classList.add('open');
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeVaultNotReadyModal();
+                }, { once: true });
+            }
+        }
+
+        function closeVaultNotReadyModal() {
+            const modal = document.getElementById('vaultNotReadyModal');
+            if (modal) modal.classList.remove('open');
+        }
+
+        const vaultNotReadyClose = document.getElementById('vaultNotReadyClose');
+        if (vaultNotReadyClose) vaultNotReadyClose.addEventListener('click', closeVaultNotReadyModal);
+
+        const vaultNotReadyDismiss = document.getElementById('vaultNotReadyDismiss');
+        if (vaultNotReadyDismiss) vaultNotReadyDismiss.addEventListener('click', closeVaultNotReadyModal);
+
+        const vaultNotReadyCreateBtn = document.getElementById('vaultNotReadyCreateBtn');
+        if (vaultNotReadyCreateBtn) {
+            vaultNotReadyCreateBtn.addEventListener('click', () => {
+                closeVaultNotReadyModal();
+                // Navigate user to Customize view
+                showView('customize');
+            });
+        }
+
+        const vaultNotReadyInlineLink = document.getElementById('vaultNotReadyInlineLink');
+        if (vaultNotReadyInlineLink) {
+            vaultNotReadyInlineLink.addEventListener('click', () => {
+                closeVaultNotReadyModal();
+                // Navigate user to Customize view
+                showView('customize');
+            });
+        }
+
+        function capitalize(str) {
+            return str ? str.charAt(0).toUpperCase() + str.slice(1) : str;
+        }
+
+        // ── Toggle Design Vault Panel ─────────────────────────────────────
+        const designVaultBtn = document.getElementById('designVaultBtn');
+        if (designVaultBtn) {
+            designVaultBtn.addEventListener('click', () => {
+                const panel = document.getElementById('designVaultPanel');
+                const isHidden = panel.style.display === 'none';
+                panel.style.display = isHidden ? 'block' : 'none';
+                const arrow = designVaultBtn.querySelector('.c-hub-arrow');
+                if(arrow) arrow.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+                if (isHidden) {
+                    setTimeout(() => panel.scrollIntoView({ behavior: 'smooth' }), 50);
+                }
+            });
+        }
+
+        // Initialize view based on current hash after everything is defined
+        window.addEventListener('hashchange', updateView);
+        updateView();
+    </script>
+
+    <!-- ── Dynamic Vault Preview Overlay ───────────────────────────── -->
+    <div class="dvp-overlay" id="dvpOverlay" role="dialog" aria-modal="true">
+        <!-- Ambient background -->
+        <div class="dvp-bg"></div>
+
+        <!-- Top bar -->
+        <div class="dvp-topbar">
+            <button class="dvp-back-btn" id="dvpCloseBtn">
+                <i class="ph ph-arrow-left"></i> Back
+            </button>
+            <div class="dvp-topbar-title">
+                <i class="ph-fill ph-gem" style="color:#e879f9;"></i>
+                Affinity Preview
+            </div>
+            <span class="dvp-section-badge" id="dvpSectionBadge">Wish</span>
+        </div>
+
+        <!-- Vault anchor -->
+        <div class="dvp-vault-anchor">
+            <img class="dvp-vault-img" id="dvpVaultImg" src="./vault-birthday.png" alt="Vault">
+            <div class="dvp-vault-label" id="dvpVaultLabel">Your Special Vault</div>
+            <div class="dvp-vault-sub" id="dvpVaultSub">Protected by Affinity</div>
+        </div>
+
+        <!-- Dynamic content panel -->
+        <div class="dvp-content" id="dvpContent">
+            <!-- Content injected by JS per section -->
+        </div>
+    </div>
+    <!-- ── End DVP Overlay ──────────────────────────────────────────── -->
+
+    <!-- ── Vault Not Ready Modal ─────────────────────────────────── -->
+    <div class="vnr-backdrop" id="vaultNotReadyModal" role="dialog" aria-modal="true" aria-labelledby="vnrTitle">
+        <div class="vnr-dialog">
+            <button class="vnr-close-btn" id="vaultNotReadyClose" aria-label="Close"><i class="ph ph-x"></i></button>
+
+            <div class="vnr-icon-wrap">
+                <div class="vnr-icon-ring">
+                    <i class="ph ph-paint-brush vnr-lock-icon"></i>
+                </div>
+                <div class="vnr-ping"></div>
+            </div>
+
+            <h2 class="vnr-title" id="vnrTitle">Vault has not been created yet.</h2>
+
+            <p class="vnr-action-label">
+                <i class="ph ph-warning-circle"></i>
+                <span id="vaultNotReadyAction">This action</span> requires a customized vault
+            </p>
+
+            <p class="vnr-body">
+                Customize your vault to enable preview. No vault data exists until you complete the customization step.
+            </p>
+
+            <div class="vnr-steps">
+                <div class="vnr-step">
+                    <div class="vnr-step-num">1</div>
+                    <span>Open <strong id="vaultNotReadyInlineLink" style="cursor:pointer; color:#c026d3; text-decoration:underline;">Customize the Vault</strong> from the builder menu</span>
+                </div>
+                <div class="vnr-step">
+                    <div class="vnr-step-num">2</div>
+                    <span>Choose a theme, name, and cover emoji</span>
+                </div>
+                <div class="vnr-step">
+                    <div class="vnr-step-num">3</div>
+                    <span>Click <strong>Apply Customization</strong> — then preview becomes available</span>
+                </div>
+            </div>
+
+            <div class="vnr-actions">
+                <button class="vnr-primary-btn" id="vaultNotReadyCreateBtn">
+                    <i class="ph ph-paint-brush"></i> Customize the Vault
+                </button>
+                <button class="vnr-ghost-btn" id="vaultNotReadyDismiss">Maybe Later</button>
+            </div>
+        </div>
+    </div>
+    <!-- ── Learn More Modal ──────────────────────────────────────── -->
+    <div class="vnr-backdrop" id="learnMoreModal" role="dialog" aria-modal="true" style="display: none;">
+        <div class="vnr-dialog" style="max-width: 500px; text-align: left;">
+            <button class="vnr-close-btn" id="learnMoreCloseBtn" aria-label="Close"><i class="ph ph-x"></i></button>
+
+            <div class="vnr-icon-wrap" style="margin: 0 auto 1.5rem auto;">
+                <div class="vnr-icon-ring">
+                    <i class="ph ph-sparkle" style="color: #c026d3; font-size: 1.5rem;"></i>
+                </div>
+            </div>
+
+            <h2 class="vnr-title" style="text-align: center; margin-bottom: 1.5rem;">The Art of Preservation</h2>
+
+            <p class="vnr-body" style="margin-bottom: 1rem; color: rgba(255,255,255,0.85); line-height: 1.6;">
+                Affinity is more than just cloud storage. It is a cinematic experience designed to preserve the emotions of today for the milestones of tomorrow.
+            </p>
+            <p class="vnr-body" style="margin-bottom: 1rem; color: rgba(255,255,255,0.85); line-height: 1.6;">
+                Whether it's a birthday, an anniversary, or a simple moment of appreciation, you can forge a digital vault filled with personal letters, cherished photographs, and a custom soundtrack.
+            </p>
+            <p class="vnr-body" style="margin-bottom: 2rem; color: rgba(255,255,255,0.85); line-height: 1.6;">
+                Seal your memories with a unique passkey and share it with your loved ones—letting them unlock a beautifully crafted timeline of nostalgia whenever the time is right.
+            </p>
+
+            <div class="vnr-actions" style="justify-content: center;">
+                <button class="vnr-primary-btn" id="learnMoreActionBtn" style="width: 100%;">
+                    Get Started
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+        let currentUserId = localStorage.getItem('affinity_user_id');
+        let currentUserName = localStorage.getItem('affinity_user_name') || 'Creator';
+        
+        if (!currentUserId) {
+            currentUserId = crypto.randomUUID();
+            localStorage.setItem('affinity_user_id', currentUserId);
+        }
+
+        if (!localStorage.getItem('affinity_user_name')) {
+            localStorage.setItem('affinity_user_name', currentUserName);
+        }
+
+        // Learn More Modal Logic
+        const learnMoreBtn = document.getElementById('learnMoreBtn');
+        const learnMoreModal = document.getElementById('learnMoreModal');
+        const learnMoreCloseBtn = document.getElementById('learnMoreCloseBtn');
+        const learnMoreActionBtn = document.getElementById('learnMoreActionBtn');
+
+        if (learnMoreBtn && learnMoreModal) {
+            learnMoreBtn.addEventListener('click', () => {
+                learnMoreModal.style.display = 'flex';
+                setTimeout(() => learnMoreModal.classList.add('open'), 10);
+            });
+            const closeLearnMore = () => {
+                learnMoreModal.classList.remove('open');
+                setTimeout(() => learnMoreModal.style.display = 'none', 300);
+            };
+            if (learnMoreCloseBtn) learnMoreCloseBtn.addEventListener('click', closeLearnMore);
+            if (learnMoreActionBtn) learnMoreActionBtn.addEventListener('click', () => {
+                closeLearnMore();
+                // Scroll to top or do something when they click get started
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            learnMoreModal.addEventListener('click', (e) => {
+                if (e.target === learnMoreModal) closeLearnMore();
+            });
+        }
+        // --- AI Letter Draft Logic ---
+        const magicDraftBtn = document.getElementById('magicDraftBtn');
+        const aiLetterModal = document.getElementById('aiLetterModal');
+        const aiModalClose = document.getElementById('aiModalClose');
+        const aiGenerateBtn = document.getElementById('aiGenerateBtn');
+        const aiBulletPoints = document.getElementById('aiBulletPoints');
+        const aiLoadingIndicator = document.getElementById('aiLoadingIndicator');
+        const lettersInput = document.getElementById('lettersInput');
+
+        if (magicDraftBtn && aiLetterModal) {
+            magicDraftBtn.addEventListener('click', () => {
+                aiLetterModal.style.display = 'flex';
+            });
+
+            aiModalClose.addEventListener('click', () => {
+                aiLetterModal.style.display = 'none';
+            });
+
+            aiGenerateBtn.addEventListener('click', async () => {
+                const bulletPoints = aiBulletPoints.value.trim();
+                if (!bulletPoints) {
+                    alert("Please enter a few bullet points first.");
+                    return;
+                }
+
+                aiGenerateBtn.style.display = 'none';
+                aiLoadingIndicator.style.display = 'block';
+
+                try {
+                    const res = await fetch('http://localhost:3000/api/vaults/generate-letter', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ bulletPoints })
+                    });
+                    
+                    const data = await res.json();
+                    
+                    if (res.ok && data.letter) {
+                        // Append or replace the textarea
+                        const currentVal = lettersInput.value.trim();
+                        lettersInput.value = currentVal ? currentVal + "\n\n" + data.letter : data.letter;
+                        aiLetterModal.style.display = 'none';
+                        aiBulletPoints.value = ''; // clear for next time
+                    } else {
+                        alert(data.error || "Failed to generate letter.");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert("An error occurred connecting to the AI service.");
+                } finally {
+                    aiGenerateBtn.style.display = 'block';
+                    aiLoadingIndicator.style.display = 'none';
+                }
+            });
+        }
+
+        // --- Voice Notes Logic ---
+        const addVoiceNoteBtn = document.getElementById('addVoiceNoteBtn');
+        if (addVoiceNoteBtn) {
+            addVoiceNoteBtn.addEventListener('click', () => {
+                showView('voiceNotes');
+            });
+        }
+        
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+        let recordingInterval;
+        let recordingTime = 0;
+        let recordedBlob = null;
+        
+        const recordBtn = document.getElementById('recordBtn');
+        const recordingTimer = document.getElementById('recordingTimer');
+        const recordingControls = document.getElementById('recordingControls');
+        const audioPlayback = document.getElementById('audioPlayback');
+        const discardRecordBtn = document.getElementById('discardRecordBtn');
+        const saveRecordBtn = document.getElementById('saveRecordBtn');
+        
+        if (recordBtn) {
+            recordBtn.addEventListener('click', async () => {
+                if (!isRecording) {
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        mediaRecorder = new MediaRecorder(stream);
+                        audioChunks = [];
+                        
+                        mediaRecorder.ondataavailable = (e) => {
+                            if (e.data.size > 0) audioChunks.push(e.data);
+                        };
+                        
+                        mediaRecorder.onstop = () => {
+                            recordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                            const audioUrl = URL.createObjectURL(recordedBlob);
+                            audioPlayback.src = audioUrl;
+                            audioPlayback.style.display = 'block';
+                            recordingControls.style.display = 'flex';
+                            recordBtn.style.display = 'none';
+                            
+                            // Stop all tracks to release microphone
+                            stream.getTracks().forEach(track => track.stop());
+                        };
+                        
+                        mediaRecorder.start();
+                        isRecording = true;
+                        recordBtn.innerHTML = '<i class="ph-fill ph-stop" style="font-size: 2rem;"></i>';
+                        recordBtn.style.animation = 'pulse 1.5s infinite';
+                        
+                        recordingTime = 0;
+                        recordingTimer.textContent = "00:00";
+                        recordingInterval = setInterval(() => {
+                            recordingTime++;
+                            const mins = String(Math.floor(recordingTime / 60)).padStart(2, '0');
+                            const secs = String(recordingTime % 60).padStart(2, '0');
+                            recordingTimer.textContent = `${mins}:${secs}`;
+                        }, 1000);
+                        
+                    } catch (err) {
+                        console.error("Microphone access denied:", err);
+                        alert("Could not access microphone.");
+                    }
+                } else {
+                    // Stop recording
+                    mediaRecorder.stop();
+                    clearInterval(recordingInterval);
+                    isRecording = false;
+                    recordBtn.style.animation = '';
+                }
+            });
+        }
+        
+        if (discardRecordBtn) {
+            discardRecordBtn.addEventListener('click', () => {
+                recordedBlob = null;
+                audioPlayback.style.display = 'none';
+                audioPlayback.src = '';
+                recordingControls.style.display = 'none';
+                recordBtn.style.display = 'flex';
+                recordBtn.innerHTML = '<i class="ph-fill ph-microphone" style="font-size: 2rem;"></i>';
+                recordingTimer.textContent = "00:00";
+            });
+        }
+        
+        if (saveRecordBtn) {
+            saveRecordBtn.addEventListener('click', async () => {
+                if (!recordedBlob) return;
+                
+                const formData = new FormData();
+                formData.append('file', recordedBlob, `voice-note-${Date.now()}.webm`);
+                
+                try {
+                    saveRecordBtn.innerHTML = '<i class="ph ph-spinner-gap" style="animation: spin 1s linear infinite;"></i> Saving...';
+                    saveRecordBtn.disabled = true;
+                    
+                    const uploadRes = await fetch('/api/vaults/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const uploadData = await uploadRes.json();
+                    
+                    if (uploadRes.ok && uploadData.file_url) {
+                        const noteRes = await fetch(`/api/vaults/${currentVaultId}/voice-notes`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                userId: currentUserId,
+                                title: 'Voice Note ' + new Date().toLocaleDateString(),
+                                fileUrl: uploadData.file_url,
+                                duration: recordingTime
+                            })
+                        });
+                        
+                        if (noteRes.ok) {
+                            showToast('Voice note saved! 🎙️');
+                            
+                            let currentNotes = parseInt(document.getElementById('voiceNotesStatus').textContent) || 0;
+                            document.getElementById('voiceNotesStatus').textContent = (currentNotes + 1) + ' Notes';
+                            
+                            showView('customize');
+                            discardRecordBtn.click();
+                        } else {
+                            alert("Failed to save note to database.");
+                        }
+                    }
+                } catch (err) {
+                    console.error("Failed to save voice note:", err);
+                    alert("Failed to save voice note.");
+                } finally {
+                    saveRecordBtn.innerHTML = '<i class="ph-fill ph-check"></i> Save Note';
+                    saveRecordBtn.disabled = false;
+                }
+            });
+        }
+
+        // --- Voice Note Upload Logic ---
+        const voiceNoteUploadBtn = document.getElementById('voiceNoteUploadBtn');
+        const voiceNoteUploadInput = document.getElementById('voiceNoteUploadInput');
+        if (voiceNoteUploadBtn && voiceNoteUploadInput) {
+            voiceNoteUploadBtn.addEventListener('click', () => {
+                voiceNoteUploadInput.click();
+            });
+            voiceNoteUploadInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const tempAudio = new Audio(URL.createObjectURL(file));
+                tempAudio.onloadedmetadata = async () => {
+                    const duration = Math.round(tempAudio.duration) || 0;
+                    
+                    const formData = new FormData();
+                    formData.append('file', file, file.name);
+                    
+                    try {
+                        voiceNoteUploadBtn.innerHTML = '<i class="ph ph-spinner-gap" style="animation: spin 1s linear infinite;"></i> Uploading...';
+                        voiceNoteUploadBtn.disabled = true;
+                        
+                        const uploadRes = await fetch('/api/vaults/upload', {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const uploadData = await uploadRes.json();
+                        
+                        if (uploadRes.ok && uploadData.file_url) {
+                            const noteRes = await fetch(`/api/vaults/${currentVaultId}/voice-notes`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    userId: currentUserId,
+                                    title: 'Uploaded Audio - ' + file.name,
+                                    fileUrl: uploadData.file_url,
+                                    duration: duration
+                                })
+                            });
+                            
+                            if (noteRes.ok) {
+                                showToast('Voice note uploaded! 🎙️');
+                                let currentNotes = parseInt(document.getElementById('voiceNotesStatus').textContent) || 0;
+                                document.getElementById('voiceNotesStatus').textContent = (currentNotes + 1) + ' Notes';
+                                showView('customize');
+                            } else {
+                                alert("Failed to save uploaded note to database.");
+                            }
+                        } else {
+                            alert("Upload failed.");
+                        }
+                    } catch (err) {
+                        console.error("Failed to upload voice note:", err);
+                        alert("Failed to upload voice note.");
+                    } finally {
+                        voiceNoteUploadBtn.innerHTML = '<i class="ph ph-upload-simple"></i> Upload Audio File';
+                        voiceNoteUploadBtn.disabled = false;
+                        voiceNoteUploadInput.value = '';
+                    }
+                };
+            });
+        }
+    </script>
+</body>
+</html>
+
