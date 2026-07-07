@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import db from '../db/database.js';
+import supabase from '../db/database.js';
 import { GoogleGenAI } from '@google/genai';
 
 // Helper to generate AFN-XXXX-XXXX
@@ -16,8 +16,7 @@ export const createVault = async (req, res) => {
 
     let passkey = customPasskey;
     if (passkey) {
-      // Check if passkey already exists
-      const existing = db.prepare('SELECT id FROM vaults WHERE passkey = ?').get(passkey);
+      const { data: existing } = await supabase.from('vaults').select('id').eq('passkey', passkey).maybeSingle();
       if (existing) {
         return res.status(409).json({ error: "Passkey already in use. Please choose another one." });
       }
@@ -28,16 +27,18 @@ export const createVault = async (req, res) => {
     const id = uuidv4();
     const collab_key = 'C-' + Math.random().toString(36).substring(2, 8).toUpperCase();
 
-    // Start transaction
-    const insertVault = db.prepare('INSERT INTO vaults (id, title, category, passkey, theme, status, user_id, created_by, unlock_date, collab_key) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-    const insertParticipant = db.prepare('INSERT INTO vault_participants (id, vault_id, user_id, user_name, role) VALUES (?, ?, ?, ?, ?)');
-    const insertActivity = db.prepare('INSERT INTO vault_activity (id, vault_id, user_id, action) VALUES (?, ?, ?, ?)');
+    const { error: vaultError } = await supabase.from('vaults').insert({
+      id, title: title || 'My Vault', category: category || 'Custom', passkey, theme: theme || 'aurora', status: 'active', created_by: user_id, unlock_date: unlock_date || null, collab_key
+    });
+    if (vaultError) throw vaultError;
 
-    db.transaction(() => {
-      insertVault.run(id, title || 'My Vault', category || 'Custom', passkey, theme || 'aurora', 'active', user_id, user_id, unlock_date || null, collab_key);
-      insertParticipant.run(uuidv4(), id, user_id, user_name || 'Anonymous', 'creator');
-      insertActivity.run(uuidv4(), id, user_id, 'created_vault');
-    })();
+    await supabase.from('vault_participants').insert({
+      id: uuidv4(), vault_id: id, user_id, user_name: user_name || 'Anonymous', role: 'creator'
+    });
+
+    await supabase.from('vault_activity').insert({
+      id: uuidv4(), vault_id: id, user_id, action: 'created_vault'
+    });
 
     res.status(201).json({ message: "Vault created successfully", passkey, vaultId: id, collab_key });
   } catch (error) {
@@ -52,14 +53,14 @@ export const updateVault = async (req, res) => {
     const { user_id, title, theme, unlock_date } = req.body;
     if (!passkey || !user_id) return res.status(400).json({ error: "passkey and user_id are required" });
 
-    const vault = db.prepare('SELECT id, created_by FROM vaults WHERE passkey = ?').get(passkey);
+    const { data: vault } = await supabase.from('vaults').select('id, created_by').eq('passkey', passkey).maybeSingle();
     if (!vault) return res.status(404).json({ error: "Vault not found" });
 
     if (vault.created_by !== user_id) {
         return res.status(403).json({ error: "Only the creator can update vault metadata" });
     }
 
-    db.prepare('UPDATE vaults SET title = ?, theme = ?, unlock_date = ? WHERE id = ?').run(title, theme, unlock_date, vault.id);
+    await supabase.from('vaults').update({ title, theme, unlock_date }).eq('id', vault.id);
 
     res.status(200).json({ message: "Vault updated successfully" });
   } catch (error) {
@@ -74,23 +75,28 @@ export const verifyPasskey = async (req, res) => {
     if (!passkey || !user_id) return res.status(400).json({ error: "passkey and user_id are required" });
 
     let isCollab = false;
-    let vault = db.prepare('SELECT id, passkey FROM vaults WHERE passkey = ?').get(passkey);
+    let { data: vault } = await supabase.from('vaults').select('id, passkey, collab_key').eq('passkey', passkey).maybeSingle();
     
     if (!vault) {
-      vault = db.prepare('SELECT id, passkey FROM vaults WHERE collab_key = ?').get(passkey);
-      if (vault) isCollab = true;
+      const { data: collabVault } = await supabase.from('vaults').select('id, passkey, collab_key').eq('collab_key', passkey).maybeSingle();
+      if (collabVault) {
+        vault = collabVault;
+        isCollab = true;
+      }
     }
 
     if (!vault) return res.status(401).json({ valid: false, message: "Invalid passkey or collab key" });
 
-    const participant = db.prepare('SELECT role FROM vault_participants WHERE vault_id = ? AND user_id = ?').get(vault.id, user_id);
+    const { data: participant } = await supabase.from('vault_participants').select('role').eq('vault_id', vault.id).eq('user_id', user_id).maybeSingle();
     let role = participant ? participant.role : 'collaborator';
 
     if (!participant) {
-      db.transaction(() => {
-        db.prepare('INSERT INTO vault_participants (id, vault_id, user_id, user_name, role) VALUES (?, ?, ?, ?, ?)').run(uuidv4(), vault.id, user_id, user_name || 'Anonymous', 'collaborator');
-        db.prepare('INSERT INTO vault_activity (id, vault_id, user_id, action) VALUES (?, ?, ?, ?)').run(uuidv4(), vault.id, user_id, 'joined_vault');
-      })();
+      await supabase.from('vault_participants').insert({
+        id: uuidv4(), vault_id: vault.id, user_id, user_name: user_name || 'Anonymous', role: 'collaborator'
+      });
+      await supabase.from('vault_activity').insert({
+        id: uuidv4(), vault_id: vault.id, user_id, action: 'joined_vault'
+      });
     }
 
     res.status(200).json({ valid: true, vaultId: vault.id, role, isCollab, passkey: vault.passkey });
@@ -103,26 +109,29 @@ export const verifyPasskey = async (req, res) => {
 export const getVaultAccess = async (req, res) => {
   try {
     const { passkey } = req.params;
-    const vault = db.prepare('SELECT * FROM vaults WHERE passkey = ?').get(passkey);
+    const { data: vault } = await supabase.from('vaults').select('*').eq('passkey', passkey).maybeSingle();
     if (!vault) return res.status(404).json({ error: "Vault not found" });
 
-    const wishes = db.prepare('SELECT * FROM vault_wishes WHERE vault_id = ? ORDER BY created_at ASC').all(vault.id);
-    const memories = db.prepare('SELECT * FROM vault_memories WHERE vault_id = ? ORDER BY created_at ASC').all(vault.id);
-    const letters = db.prepare('SELECT * FROM vault_letters WHERE vault_id = ? ORDER BY created_at ASC').all(vault.id);
-    const soundtracks = db.prepare('SELECT * FROM vault_soundtracks WHERE vault_id = ? ORDER BY created_at ASC').all(vault.id);
-    const participants = db.prepare('SELECT * FROM vault_participants WHERE vault_id = ?').all(vault.id);
+    const [
+      { data: wishes },
+      { data: memories },
+      { data: letters },
+      { data: soundtracks },
+      { data: participants }
+    ] = await Promise.all([
+      supabase.from('vault_wishes').select('*').eq('vault_id', vault.id).order('created_at', { ascending: true }),
+      supabase.from('vault_memories').select('*').eq('vault_id', vault.id).order('created_at', { ascending: true }),
+      supabase.from('vault_letters').select('*').eq('vault_id', vault.id).order('created_at', { ascending: true }),
+      supabase.from('vault_soundtracks').select('*').eq('vault_id', vault.id).order('created_at', { ascending: true }),
+      supabase.from('vault_participants').select('*').eq('vault_id', vault.id)
+    ]);
 
     const userId = req.query.user_id;
     let collabKey = null;
     if (userId && vault.created_by === userId) {
       if (!vault.collab_key) {
-        // Auto-generate for legacy vaults
         collabKey = 'C-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-        try {
-          db.prepare('UPDATE vaults SET collab_key = ? WHERE id = ?').run(collabKey, vault.id);
-        } catch (e) {
-          console.error("Failed to generate legacy collab key", e);
-        }
+        await supabase.from('vaults').update({ collab_key: collabKey }).eq('id', vault.id);
       } else {
         collabKey = vault.collab_key;
       }
@@ -130,11 +139,11 @@ export const getVaultAccess = async (req, res) => {
 
     res.status(200).json({
       vault,
-      wishes,
-      memories,
-      letters,
-      soundtracks,
-      participants,
+      wishes: wishes || [],
+      memories: memories || [],
+      letters: letters || [],
+      soundtracks: soundtracks || [],
+      participants: participants || [],
       collab_key: collabKey
     });
   } catch (error) {
@@ -149,28 +158,27 @@ export const addVaultContent = async (req, res) => {
     const { user_id, type, data } = req.body;
     if (!user_id || !type || !data) return res.status(400).json({ error: "user_id, type, and data are required" });
 
-    const participant = db.prepare('SELECT role FROM vault_participants WHERE vault_id = ? AND user_id = ?').get(vaultId, user_id);
+    const { data: participant } = await supabase.from('vault_participants').select('role').eq('vault_id', vaultId).eq('user_id', user_id).maybeSingle();
     if (!participant) return res.status(403).json({ error: "Not a participant of this vault" });
 
     const id = uuidv4();
     let action = '';
 
-    db.transaction(() => {
-      if (type === 'wish') {
-        db.prepare('INSERT INTO vault_wishes (id, vault_id, user_id, message) VALUES (?, ?, ?, ?)').run(id, vaultId, user_id, data.message);
-        action = 'added_wish';
-      } else if (type === 'memory') {
-        db.prepare('INSERT INTO vault_memories (id, vault_id, user_id, type, title, file_url) VALUES (?, ?, ?, ?, ?, ?)').run(id, vaultId, user_id, data.type, data.title, data.file_url);
-        action = 'added_memory';
-      } else if (type === 'letter') {
-        db.prepare('INSERT INTO vault_letters (id, vault_id, user_id, title, content) VALUES (?, ?, ?, ?, ?)').run(id, vaultId, user_id, data.title, data.content);
-        action = 'added_letter';
-      } else if (type === 'soundtrack') {
-        db.prepare('INSERT INTO vault_soundtracks (id, vault_id, user_id, title, file_url, duration) VALUES (?, ?, ?, ?, ?, ?)').run(id, vaultId, user_id, data.title, data.file_url, data.duration || 0);
-        action = 'added_song';
-      }
-      db.prepare('INSERT INTO vault_activity (id, vault_id, user_id, action) VALUES (?, ?, ?, ?)').run(uuidv4(), vaultId, user_id, action);
-    })();
+    if (type === 'wish') {
+      await supabase.from('vault_wishes').insert({ id, vault_id: vaultId, user_id, message: data.message });
+      action = 'added_wish';
+    } else if (type === 'memory') {
+      await supabase.from('vault_memories').insert({ id, vault_id: vaultId, user_id, type: data.type, title: data.title, file_url: data.file_url });
+      action = 'added_memory';
+    } else if (type === 'letter') {
+      await supabase.from('vault_letters').insert({ id, vault_id: vaultId, user_id, title: data.title, content: data.content });
+      action = 'added_letter';
+    } else if (type === 'soundtrack') {
+      await supabase.from('vault_soundtracks').insert({ id, vault_id: vaultId, user_id, title: data.title, file_url: data.file_url, duration: data.duration || 0 });
+      action = 'added_song';
+    }
+
+    await supabase.from('vault_activity').insert({ id: uuidv4(), vault_id: vaultId, user_id, action });
 
     res.status(201).json({ message: "Content added successfully", id });
   } catch (error) {
@@ -211,29 +219,26 @@ ${bulletPoints}`;
   }
 };
 
-export const getVoiceNotes = (req, res) => {
+export const getVoiceNotes = async (req, res) => {
   try {
     const { vaultId } = req.params;
-    const voiceNotes = db.prepare('SELECT * FROM vault_voice_notes WHERE vault_id = ? ORDER BY created_at DESC').all(vaultId);
-    res.status(200).json({ voiceNotes });
+    const { data: voiceNotes } = await supabase.from('vault_voice_notes').select('*').eq('vault_id', vaultId).order('created_at', { ascending: false });
+    res.status(200).json({ voiceNotes: voiceNotes || [] });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch voice notes" });
   }
 };
 
-export const addVoiceNote = (req, res) => {
+export const addVoiceNote = async (req, res) => {
   try {
     const { vaultId } = req.params;
     const { userId, title, fileUrl, duration } = req.body;
-    const id = generatePasskey(); // simple unique id, could use uuid
+    const id = uuidv4(); 
 
-    const stmt = db.prepare(`
-      INSERT INTO vault_voice_notes (id, vault_id, user_id, title, file_url, duration)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `);
-    
-    stmt.run(id, vaultId, userId, title, fileUrl, duration);
+    await supabase.from('vault_voice_notes').insert({
+      id, vault_id: vaultId, user_id: userId, title, file_url: fileUrl, duration
+    });
     
     res.status(201).json({ 
       id, 

@@ -1,28 +1,18 @@
 import express from 'express';
 import multer from 'multer';
-import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { createVault, verifyPasskey, getVaultAccess, addVaultContent, updateVault, generateLetter, getVoiceNotes, addVoiceNote } from '../controllers/vaultController.js';
 import rateLimit from 'express-rate-limit';
+import supabase from '../db/database.js';
 
 const router = express.Router();
 
-// Multer config for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(process.cwd(), 'uploads'));
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `${uuidv4()}${ext}`);
-  }
-});
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Rate limiting for verify endpoints to prevent brute force
 const verifyLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // limit each IP to 10 requests per windowMs
+  windowMs: 15 * 60 * 1000,
+  max: 10,
   message: { error: "Too many attempts, please try again later" }
 });
 
@@ -34,13 +24,36 @@ router.post('/generate-letter', generateLetter);
 router.get('/:vaultId/voice-notes', getVoiceNotes);
 router.post('/:vaultId/voice-notes', addVoiceNote);
 
-// File upload route
-router.post('/upload', upload.single('file'), (req, res) => {
+// File upload route via Supabase Storage
+router.post('/upload', upload.single('file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }
-  const fileUrl = `/uploads/${req.file.filename}`;
-  res.status(200).json({ file_url: fileUrl });
+  try {
+    const ext = req.file.originalname.split('.').pop();
+    const filename = `${uuidv4()}.${ext}`;
+    
+    const { data, error } = await supabase.storage
+      .from('uploads')
+      .upload(filename, req.file.buffer, {
+        contentType: req.file.mimetype,
+        upsert: false
+      });
+      
+    if (error) {
+      console.error("Supabase upload error:", error);
+      return res.status(500).json({ error: "Failed to upload file to storage" });
+    }
+    
+    const { data: publicUrlData } = supabase.storage
+      .from('uploads')
+      .getPublicUrl(filename);
+      
+    res.status(200).json({ file_url: publicUrlData.publicUrl });
+  } catch (err) {
+    console.error("Server upload error:", err);
+    res.status(500).json({ error: "Server upload error" });
+  }
 });
 
 export default router;

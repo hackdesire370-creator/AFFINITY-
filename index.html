@@ -255,7 +255,7 @@
             <!-- ── Customize the Vault view ────────────────────────────── -->
             <main class="main-content builder-view" id="view-customize" style="display:none; flex-direction: column;">
                 <div class="builder-page-header" style="flex-direction: column; align-items: flex-start; margin-bottom: 2rem; width: 100%; max-width: 800px; margin: 0 auto 2rem auto;">
-                    <button class="back-btn" data-back="true" style="margin-bottom: 2rem;"><i class="ph ph-arrow-left"></i> Back</button>
+                    <button class="back-btn" onclick="showView('affinityBuilder')" style="margin-bottom: 2rem;"><i class="ph ph-arrow-left"></i> Back</button>
                     <div class="builder-page-title">
                         <div class="builder-page-icon" style="color: #e879f9; text-shadow: 0 0 15px rgba(217,70,239,0.5);"><i class="ph-fill ph-magic-wand"></i></div>
                         <div>
@@ -889,9 +889,27 @@
         let viewHistory = ['dashboard'];
         let isGoingBack = false;
 
+        // Initialize history state on load
+        if (!window.history.state) {
+            window.history.replaceState({ view: 'dashboard' }, "", "#dashboard");
+        }
+
+        window.addEventListener('popstate', (e) => {
+            if (e.state && e.state.view) {
+                isGoingBack = true;
+                if (viewHistory.length > 1 && viewHistory[viewHistory.length - 2] === e.state.view) {
+                    viewHistory.pop();
+                } else {
+                    viewHistory.push(e.state.view);
+                }
+                showView(e.state.view);
+            }
+        });
+
         function showView(name) {
             if (!isGoingBack && viewHistory[viewHistory.length - 1] !== name) {
                 viewHistory.push(name);
+                window.history.pushState({ view: name }, "", "#" + name);
             }
             isGoingBack = false;
 
@@ -908,13 +926,17 @@
         }
 
         function goBack() {
-            if (viewHistory.length > 1) {
-                viewHistory.pop(); // Remove current view
-                isGoingBack = true;
-                showView(viewHistory[viewHistory.length - 1]);
+            if (window.history.state !== null && viewHistory.length > 1) {
+                window.history.back();
             } else {
-                isGoingBack = true;
-                showView('dashboard');
+                if (viewHistory.length > 1) {
+                    viewHistory.pop(); // Remove current view
+                    isGoingBack = true;
+                    showView(viewHistory[viewHistory.length - 1]);
+                } else {
+                    isGoingBack = true;
+                    showView('dashboard');
+                }
             }
         }
 
@@ -1229,7 +1251,7 @@
         const memoriesBackBtn = document.getElementById('memoriesBackBtn');
         if (memoriesBackBtn) {
             memoriesBackBtn.addEventListener('click', () => {
-                showView('customize');
+                goBack();
             });
         }
 
