@@ -1500,11 +1500,20 @@
                     }
                     for (let mem of VaultState.memories) {
                         if (!mem.is_synced) {
+                            let finalUrl = mem.file_url || mem.url;
+                            if (mem.file) {
+                                const fd = new FormData();
+                                fd.append('file', mem.file);
+                                const uRes = await fetch('/api/vaults/upload', { method: 'POST', body: fd });
+                                const uData = await uRes.json();
+                                if (uData.file_url) finalUrl = uData.file_url;
+                            }
                             await fetch(`/api/vaults/${currentVaultId}/content`, {
                                 method: 'POST', headers: {'Content-Type':'application/json'},
-                                body: JSON.stringify({ user_id: currentUserId, type: 'memory', data: { type: mem.type, title: mem.caption, file_url: mem.file_url || mem.url } })
+                                body: JSON.stringify({ user_id: currentUserId, type: 'memory', data: { type: mem.type, title: mem.caption, file_url: finalUrl } })
                             });
                             mem.is_synced = true;
+                            mem.file_url = finalUrl;
                         }
                     }
                     for (let letter of VaultState.letters) {
@@ -1518,11 +1527,20 @@
                     }
                     for (let track of VaultState.soundtrack) {
                         if (!track.is_synced) {
+                            let finalUrl = track.file_url || track.url;
+                            if (track.file) {
+                                const fd = new FormData();
+                                fd.append('file', track.file);
+                                const uRes = await fetch('/api/vaults/upload', { method: 'POST', body: fd });
+                                const uData = await uRes.json();
+                                if (uData.file_url) finalUrl = uData.file_url;
+                            }
                             await fetch(`/api/vaults/${currentVaultId}/content`, {
                                 method: 'POST', headers: {'Content-Type':'application/json'},
-                                body: JSON.stringify({ user_id: currentUserId, type: 'soundtrack', data: { title: track.name, file_url: track.file_url || track.url, duration: track.duration } })
+                                body: JSON.stringify({ user_id: currentUserId, type: 'soundtrack', data: { title: track.name, file_url: finalUrl, duration: track.duration } })
                             });
                             track.is_synced = true;
+                            track.file_url = finalUrl;
                         }
                     }
                     
